@@ -1,5 +1,9 @@
 import React from 'react';
+import { connect } from 'react-redux'
 import { AsyncStorage, Alert, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
+import { getDecks, setDecks } from '../actions'
+import reducer from '../reducers'
+
 var STORAGE_KEY = '@mobile-flashcards';
 
 let deck = {
@@ -28,7 +32,42 @@ JavaScript: {
 };
 
 
-export default class Test extends React.Component {
+class Test extends React.Component {
+
+  componentDidMount() {
+    this._loadInitialState().done();
+    //this.props.getDecks(STORAGE_KEY);
+    console.log(this.props)
+  }
+
+
+  async _loadInitialState() {
+    try {
+      var value = await AsyncStorage.getItem(STORAGE_KEY);
+      if (value !== null){
+  //      Alert.alert("returned value was ")
+        //Alert.alert(value)
+//        this.setState({decks: value});
+        let test = JSON.parse(value)
+        console.log("got initial state")
+      //  console.log(test)
+        this.props.getDecks()
+//        this.props.setDecks(test)
+        //console.log(value)
+        //console.log(test['JavasScript'])
+
+        console.log("got props")
+        console.log(this.props.decks)
+      } else {
+        Alert.alert('Initialized with no selection on disk.')
+        //setState({decks:null,lastPlayed:null})
+      }
+    } catch (error) {
+      Alert.alert("there was an error with AsynStorage " + error)
+      console.log(error)
+    }
+  }
+
 
 
   async  _saveToAsyncStorage() {
@@ -52,8 +91,12 @@ export default class Test extends React.Component {
     }
 
 render(){
+
+//console.log("in render")
+//console.log(this.props)
+
 return (
-  <View style={{flex: 1,flexDirection:'column'}}>
+  <View style={{flex: 1,flexDirection:'column', height:100}}>
     <View style={styles.container}>
         <TouchableHighlight onPress={this._saveToAsyncStorage} underlayColor="white">
           <Text style={styles.buttonText}>
@@ -81,7 +124,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     flex: 1,
     flexDirection: 'row',
-    width:50,
+    width:250,
     height: 500,
     top:50,
     height:1
@@ -89,6 +132,7 @@ const styles = StyleSheet.create({
   button: {
      marginBottom: 30,
      width: 260,
+     height:100,
      alignItems: 'center',
      backgroundColor: '#2196F3'
    },
@@ -97,3 +141,22 @@ const styles = StyleSheet.create({
      color: 'white'
    }
 })
+
+
+const mapStateToProps = ((state) => (
+  {
+   decks: state.decks,
+
+}));
+
+function mapDispatchToProps(dispatch) {
+  return{
+  getDecks: (data) => dispatch(getDecks(data)),
+  setDecks: (data) => dispatch(setDecks(data)),
+  }
+}
+
+
+export default connect(
+  mapStateToProps,mapDispatchToProps
+)(Test)

@@ -1,40 +1,36 @@
 import { combineReducers } from 'redux'
 
 import {
-  ADD_NEW_POST,
-  REMOVE_POST,
+  ADD_DECKS,
+  SET_DECKS,
 } from '../actions/types'
 
-const initialQuestions = {
-  /*React: {
-    title: 'React',
-    questions: [
-      {
-        question: 'What is React?',
-        answer: 'A library for managing user interfaces'
-      },
-      {
-        question: 'Where do you make Ajax requests in React?',
-        answer: 'The componentDidMount lifecycle event'
-      }
-    ]
-  },
-  JavaScript: {
-    title: 'JavaScript',
-    questions: [
-      {
-        question: 'What is a closure?',
-        answer: 'The combination of a function and the lexical environment within which that function was declared.'
-      }
-    ]
-  }*/
-};
+const initialQuestions = null;
 
 const lastPlayed = {
   /*lastPlayed*/
 }
 
+function decks (state = {}, action) {
+console.log("in reducer")
+console.log(action)
+  switch (action.type) {
+    case SET_DECKS:
+      return {
+        ...state, ...action
+      }
+
+    case ADD_DECKS:
+    console.log("in add_decks")
+    return {
+      ...state,...action.decks
+    }
+    default:
+    return state
+}
+}
+
 export default combineReducers({
-  questions,
-  lastPlayed,
+  decks,
+//  lastPlayed,
 })
