@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { AsyncStorage, Alert, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
-import { getDecks, setDecks } from '../actions'
+import { getDecks } from '../utils/api'
+import { setDecks } from '../actions'
 import reducer from '../reducers'
 
 var STORAGE_KEY = '@mobile-flashcards';
@@ -35,14 +36,21 @@ JavaScript: {
 class Test extends React.Component {
 
   componentDidMount() {
-    this._loadInitialState().done();
+  //  this._loadInitialState().done();
     //this.props.getDecks(STORAGE_KEY);
-    console.log(this.props)
+    getDecks().then((decks) => this.props.setDecks(JSON.parse(decks)))
+    console.log("get decks")
+    //getDecks().then((decks) => console.log(JSON.parse(decks)))
+    console.log("After get")
+    console.log("going for props")
+    console.log(this.props.decks)
+    //console.log(value)
+    //console.log("After value")
   }
 
 
-  async _loadInitialState() {
-    try {
+   _loadInitialState() {
+  /*  try {
       var value = await AsyncStorage.getItem(STORAGE_KEY);
       if (value !== null){
   //      Alert.alert("returned value was ")
@@ -51,7 +59,7 @@ class Test extends React.Component {
         let test = JSON.parse(value)
         console.log("got initial state")
       //  console.log(test)
-        this.props.getDecks()
+
 //        this.props.setDecks(test)
         //console.log(value)
         //console.log(test['JavasScript'])
@@ -65,7 +73,8 @@ class Test extends React.Component {
     } catch (error) {
       Alert.alert("there was an error with AsynStorage " + error)
       console.log(error)
-    }
+    }*/
+getDecks(STORAGE_KEY)
   }
 
 
@@ -79,6 +88,7 @@ class Test extends React.Component {
     }
    }
 
+
    async  _readFromAsyncStorage() {
       Alert.alert('We will attempt to store into AsyncStorage!')
       try {
@@ -91,10 +101,8 @@ class Test extends React.Component {
     }
 
 render(){
-
-//console.log("in render")
-//console.log(this.props)
-
+console.log("in render")
+console.log(this.props.decks)
 return (
   <View style={{flex: 1,flexDirection:'column', height:100}}>
     <View style={styles.container}>
@@ -146,13 +154,11 @@ const styles = StyleSheet.create({
 const mapStateToProps = ((state) => (
   {
    decks: state.decks,
-
 }));
 
 function mapDispatchToProps(dispatch) {
   return{
-  getDecks: (data) => dispatch(getDecks(data)),
-  setDecks: (data) => dispatch(setDecks(data)),
+    setDecks: (data) => dispatch(setDecks(data)),
   }
 }
 

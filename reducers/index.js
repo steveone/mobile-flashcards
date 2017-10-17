@@ -12,18 +12,17 @@ const lastPlayed = {
 }
 
 function decks (state = {}, action) {
-console.log("in reducer")
-console.log(action)
+//console.log("in reducer")
+//console.log(action.data)
   switch (action.type) {
     case SET_DECKS:
       return {
         ...state, ...action
       }
-
     case ADD_DECKS:
-    console.log("in add_decks")
+    //console.log("in add_decks")
     return {
-      ...state,...action.decks
+      ...state,...action.data
     }
     default:
     return state
