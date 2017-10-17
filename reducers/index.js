@@ -3,12 +3,24 @@ import { combineReducers } from 'redux'
 import {
   ADD_DECKS,
   SET_DECKS,
+  SET_LOADED,
 } from '../actions/types'
 
 const initialQuestions = null;
 
 const lastPlayed = {
   /*lastPlayed*/
+}
+
+function loaded (state = {}, action){
+  switch (action.type){
+    case SET_LOADED:
+    return {...state,
+     loaded:true
+    }
+  default:
+    return  null
+  }
 }
 
 function decks (state = {}, action) {
@@ -26,10 +38,11 @@ function decks (state = {}, action) {
     }
     default:
     return state
-}
+  }
 }
 
 export default combineReducers({
   decks,
+  loaded,
 //  lastPlayed,
 })

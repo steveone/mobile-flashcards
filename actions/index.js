@@ -3,6 +3,7 @@ import getDecksFromAPI from '../utils/api'
 
 import {
   ADD_DECKS,
+  SET_LOADED,
 //  SET_DECKS,
 } from './types';
 
@@ -10,6 +11,13 @@ export function setDecks (data) {
   return{
     type: ADD_DECKS,
     data
+  }
+}
+
+export function setLoaded(){
+  return{
+    type:SET_LOADED,
+    loaded: true
   }
 }
 

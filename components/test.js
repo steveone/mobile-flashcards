@@ -1,11 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { AsyncStorage, Alert, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
-import { getDecks } from '../utils/api'
-import { setDecks } from '../actions'
+import { getDecks} from '../utils/api'
+import { setDecks,setLoaded } from '../actions'
 import reducer from '../reducers'
 
 var STORAGE_KEY = '@mobile-flashcards';
+
+let loadedState = null
 
 let deck = {
   React: {
@@ -33,17 +35,25 @@ JavaScript: {
 };
 
 
+
 class Test extends React.Component {
+
+
 
   componentDidMount() {
   //  this._loadInitialState().done();
     //this.props.getDecks(STORAGE_KEY);
+    console.log(this.props)
     getDecks().then((decks) => this.props.setDecks(JSON.parse(decks)))
     console.log("get decks")
     //getDecks().then((decks) => console.log(JSON.parse(decks)))
     console.log("After get")
     console.log("going for props")
     console.log(this.props.decks)
+    setTimeout(this.props.setLoaded,
+    5000
+    )
+
     //console.log(value)
     //console.log("After value")
   }
@@ -74,7 +84,7 @@ class Test extends React.Component {
       Alert.alert("there was an error with AsynStorage " + error)
       console.log(error)
     }*/
-getDecks(STORAGE_KEY)
+//getDecks(STORAGE_KEY)
   }
 
 
@@ -103,9 +113,23 @@ getDecks(STORAGE_KEY)
 render(){
 console.log("in render")
 console.log(this.props.decks)
+console.log(this.props.loaded)
 return (
+
   <View style={{flex: 1,flexDirection:'column', height:100}}>
-    <View style={styles.container}>
+
+  {(this.props.loaded === null) && (<View style={styles.fullContainer}>
+          <Text style={styles.buttonText}>
+            Loading please wait
+          </Text>
+
+    </View>
+)}
+
+    {(this.props.loaded !== null) && (
+      <View style={{flex: 1,flexDirection:'column', height:100}}>
+
+      <View style={styles.container}>
         <TouchableHighlight onPress={this._saveToAsyncStorage} underlayColor="white">
           <Text style={styles.buttonText}>
             Save to Async Storage
@@ -120,11 +144,24 @@ return (
       </Text>
     </TouchableHighlight>
     </View>
-  </View>
+    </View>
+  )}
+</View>
+
 )}
 }
 
 const styles = StyleSheet.create({
+  fullContainer: {
+    backgroundColor: 'red',
+    borderColor: 'black',
+    borderStyle: 'solid',
+    borderRadius: 20,
+    flex: 1,
+    height:250,
+    width:250,
+    top:50,
+  },
   container: {
     backgroundColor: 'red',
     borderColor: 'black',
@@ -134,8 +171,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width:250,
     height: 500,
-    top:50,
-    height:1
   },
   button: {
      marginBottom: 30,
@@ -154,11 +189,13 @@ const styles = StyleSheet.create({
 const mapStateToProps = ((state) => (
   {
    decks: state.decks,
+   loaded: state.loaded,
 }));
 
 function mapDispatchToProps(dispatch) {
   return{
     setDecks: (data) => dispatch(setDecks(data)),
+    setLoaded: () => dispatch(setLoaded())
   }
 }
 
