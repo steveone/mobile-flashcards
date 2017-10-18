@@ -32,7 +32,8 @@ function decks (state = {}, action) {
         ...state, ...action
       }
     case ADD_DECKS:
-    //console.log("in add_decks")
+//    console.log("in add_decks")
+//    console.log(action.data)
     return {
       ...state,...action.data
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { AsyncStorage, Alert, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
+import { ActivityIndicator, AsyncStorage, Alert, ScrollView, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
 import { getDecks} from '../utils/api'
 import { setDecks,setLoaded } from '../actions'
 import reducer from '../reducers'
@@ -38,7 +38,9 @@ JavaScript: {
 
 class Test extends React.Component {
 
-
+  shouldComponentUpdate(prevProps, prevState){
+    return true
+  }
 
   componentDidMount() {
   //  this._loadInitialState().done();
@@ -49,9 +51,9 @@ class Test extends React.Component {
     //getDecks().then((decks) => console.log(JSON.parse(decks)))
     console.log("After get")
     console.log("going for props")
-    console.log(this.props.decks)
+    //console.log(this.props.decks)
     setTimeout(this.props.setLoaded,
-    5000
+    1000
     )
 
     //console.log(value)
@@ -92,7 +94,7 @@ class Test extends React.Component {
   async  _saveToAsyncStorage() {
      try {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(deck));
-      Alert.alert('Saved selection to disk');
+      //Alert.alert('Saved selection to disk');
     } catch (error) {
      Alert.alert('AsyncStorage error: ' + error.message);
     }
@@ -100,7 +102,7 @@ class Test extends React.Component {
 
 
    async  _readFromAsyncStorage() {
-      Alert.alert('We will attempt to store into AsyncStorage!')
+      //Alert.alert('We will attempt to store into AsyncStorage!')
       try {
        await AsyncStorage.getItem(STORAGE_KEY, (err,result) => {
          Alert.alert(result)
@@ -113,39 +115,34 @@ class Test extends React.Component {
 render(){
 console.log("in render")
 console.log(this.props.decks)
-console.log(this.props.loaded)
+//console.log(decks)
+//console.log(this.props.loaded)
+const showLoading = (this.props.loaded === null) ? true : false
+let decks = null
+if (this.props.decks) {
+  decks = this.props.decks
+  }
+  else {
+    decks = null
+  }
+console.log("next decks")
+console.log(decks)
 return (
 
-  <View style={{flex: 1,flexDirection:'column', height:100}}>
+  <View  key='11' style={{flex: 1,flexDirection:'column', height:10, top:10, width:10, padding:20}}>
 
-  {(this.props.loaded === null) && (<View style={styles.fullContainer}>
-          <Text style={styles.buttonText}>
-            Loading please wait
-          </Text>
+  {(this.props.loaded === null) && (
+<ActivityIndicator animating={showLoading} color='white'  backgroundColor='black' size='large' />
 
-    </View>
 )}
+<ScrollView style={styles.fullContainer}>
+{decks && Object.keys(decks).map((deck)=>
+  <TouchableHighlight>
+  <Text style={styles.button}>{deck}</Text>
+  </TouchableHighlight>
+)}
+</ScrollView>
 
-    {(this.props.loaded !== null) && (
-      <View style={{flex: 1,flexDirection:'column', height:100}}>
-
-      <View style={styles.container}>
-        <TouchableHighlight onPress={this._saveToAsyncStorage} underlayColor="white">
-          <Text style={styles.buttonText}>
-            Save to Async Storage
-          </Text>
-        </TouchableHighlight>
-
-    </View>
-    <View style={styles.container} >
-    <TouchableHighlight onPress={this._readFromAsyncStorage} underlayColor="white">
-      <Text style={styles.buttonText}>
-        Get from Async Storage
-      </Text>
-    </TouchableHighlight>
-    </View>
-    </View>
-  )}
 </View>
 
 )}
@@ -158,9 +155,9 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderRadius: 20,
     flex: 1,
-    height:250,
-    width:250,
-    top:50,
+    height:40,
+    width:400,
+    padding:20
   },
   container: {
     backgroundColor: 'red',
@@ -169,10 +166,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     flex: 1,
     flexDirection: 'row',
-    width:250,
-    height: 500,
+    width:50,
+    height: 50,
   },
   button: {
+     padding: 50,
      marginBottom: 30,
      width: 260,
      height:100,
@@ -181,9 +179,12 @@ const styles = StyleSheet.create({
    },
    buttonText: {
      padding: 20,
+     width: 100,
+     height:100,
      color: 'white'
    }
 })
+
 
 
 const mapStateToProps = ((state) => (

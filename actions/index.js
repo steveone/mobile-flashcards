@@ -8,6 +8,9 @@ import {
 } from './types';
 
 export function setDecks (data) {
+  console.log("in action")
+  console.log(data)
+  console.log("out action")
   return{
     type: ADD_DECKS,
     data

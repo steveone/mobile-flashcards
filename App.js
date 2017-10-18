@@ -7,8 +7,17 @@ import { getDecksFromAPI } from './actions'
 import reducer from './reducers'
 import { createStore,applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk';
+//import DevToolsApp from 'remotedev-app';
 
 var STORAGE_KEY = '@mobile-flashcards';
+
+
+//  NativeModules.DevSettings.setIsDebuggingRemotely(true)
+
+const myStore = store(
+  reducer,
+    applyMiddleware(thunk,logger)
+);
 
 export default class App extends Component {
 
@@ -19,33 +28,13 @@ export default class App extends Component {
     }
 
 
-    async _loadInitialState() {
-      try {
-        var value = await AsyncStorage.getItem(STORAGE_KEY);
-        if (value !== null){
-    //      Alert.alert("returned value was ")
-          //Alert.alert(value)
-          this.setState({decks: value});
-          let test = JSON.parse(value)
-          //console.log(test['JavasScript'])
-        } else {
-          Alert.alert('Initialized with no selection on disk.')
-          setState({decks:null,lastPlayed:null})
-        }
-      } catch (error) {
-        Alert.alert("there was an error with AsynStorage " + error)
-      }
-    }
 
 
   render() {
 
 return (
-  <Provider store={createStore(reducer)}>
-  <ScrollView style={styles.container} contentContainerStyle={styles.center}>
-
+  <Provider store={myStore}>
           <Test />
-        </ScrollView>
       </Provider>
 )
 }
@@ -124,14 +113,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps)(AppWithNavigationState)
 */
-
-
-class Root extends React.Component {
-  render() {
-    return (
-      <Provider createStore={reducer}>
-        <AppWithNavigationState />
-      </Provider>
-    );
-  }
-}
