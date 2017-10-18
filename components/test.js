@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { ActivityIndicator, AsyncStorage, Alert, ScrollView, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
+import { ActivityIndicator, TextInput, TouchableNativeFeedback, AsyncStorage, Alert, ScrollView, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
 import { getDecks} from '../utils/api'
 import { setDecks,setLoaded } from '../actions'
 import reducer from '../reducers'
@@ -37,6 +37,11 @@ JavaScript: {
 
 
 class Test extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = { text: 'Useless Placeholder' };
+  }
 
   shouldComponentUpdate(prevProps, prevState){
     return true
@@ -89,7 +94,9 @@ class Test extends React.Component {
 //getDecks(STORAGE_KEY)
   }
 
-
+outputLog = () => {
+   console.log("got pressed with value " + this.state.text)
+ }
 
   async  _saveToAsyncStorage() {
      try {
@@ -129,18 +136,31 @@ console.log("next decks")
 console.log(decks)
 return (
 
-  <View  key='11' style={{flex: 1,flexDirection:'column', height:10, top:10, width:10, padding:20}}>
+  <View  key='11' style={{flex: 1,flexDirection:'column', height:200, top:10, width:10, padding:20}}>
 
   {(this.props.loaded === null) && (
-<ActivityIndicator animating={showLoading} color='white'  backgroundColor='black' size='large' />
+      <ActivityIndicator
+        animating={showLoading}
+        color='white'
+        backgroundColor='black'
+        size='large' />
+  )}
 
-)}
 <ScrollView style={styles.fullContainer}>
 {decks && Object.keys(decks).map((deck)=>
-  <TouchableHighlight>
+  <TouchableHighlight >
   <Text style={styles.button}>{deck}</Text>
   </TouchableHighlight>
 )}
+<View style={{top:50, height:300, width:200, padding:10}}>
+  <TextInput
+    style={{height: 40, borderColor: 'white',  borderWidth: 1}}
+    onChangeText={(text) => this.setState({text})}
+      value={this.state.text}
+    >
+    </TextInput>
+  <Button style={styles.button} title={'Add New Deck'} onPress = {this.outputLog.bind(this)}/>
+</View>
 </ScrollView>
 
 </View>
@@ -155,9 +175,9 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderRadius: 20,
     flex: 1,
-    height:40,
-    width:400,
-    padding:20
+    height:500,
+    width:500,
+    padding:10
   },
   container: {
     backgroundColor: 'red',
@@ -170,10 +190,10 @@ const styles = StyleSheet.create({
     height: 50,
   },
   button: {
-     padding: 50,
-     marginBottom: 30,
-     width: 260,
-     height:100,
+     padding: 5,
+     marginBottom: 3,
+     width: 50,
+     height:50,
      alignItems: 'center',
      backgroundColor: '#2196F3'
    },
