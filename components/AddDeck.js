@@ -4,8 +4,6 @@ import { Dimensions, ActivityIndicator, TextInput, TouchableNativeFeedback, Asyn
 import { getDecks} from '../utils/api'
 import { setDecks,setLoaded } from '../actions'
 import reducer from '../reducers'
-import { StackNavigator } from 'react-navigation';
-import { NavigationActions } from 'react-navigation'
 
 var STORAGE_KEY = '@mobile-flashcards';
 
@@ -151,11 +149,7 @@ return (
   )}
 
 <ScrollView style={styles.fullContainer}>
-{decks && Object.keys(decks).map((deck)=>
-  <TouchableHighlight key={deck}>
-  <Text style={styles.button}>{deck}</Text>
-  </TouchableHighlight>
-)}
+
 <View style={{top:50, height:300, width:this.width, padding:10}}>
   <Text>Create a new deck by entering a title below:</Text>
   <TextInput

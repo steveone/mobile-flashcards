@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { ScrollView, Alert, StyleSheet, Text, View, AsyncStorage } from 'react-native';
+import { Dimensions, ScrollView, Alert, StyleSheet, Text, View, AsyncStorage } from 'react-native';
 import Test from './components/test';
+import Navigator from './components/navigator';
 import { connect,Provider } from 'react-redux'
 import store from './store/store';
 import { getDecksFromAPI } from './actions'
@@ -19,12 +20,17 @@ const myStore = store(
     applyMiddleware(thunk,logger)
 );
 
+
+
 export default class App extends Component {
+
+
 
     componentDidMount() {
       //this._loadInitialState().done();
       //this.props.getDecks(STORAGE_KEY);
     //  console.log(this.props)
+    const { width, height } = Dimensions.get('window');
     }
 
 
@@ -34,7 +40,7 @@ export default class App extends Component {
 
 return (
   <Provider store={myStore}>
-          <Test />
+          <Navigator />
       </Provider>
 )
 }
@@ -79,15 +85,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    //height:500,
-    //width:50,
-    //top:200,
-  /*  alignItems: 'center',
-    justifyContent: 'center',
-    */
+    height:this.height,
+    width:this.width,
+    justifyContent:'flex-start',
     backgroundColor: 'transparent',
-    paddingLeft:20,
-    paddingRight:20
 
   },
 
