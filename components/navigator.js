@@ -10,16 +10,18 @@ var STORAGE_KEY = '@mobile-flashcards';
 
 
 
-const AddDecks = () => (
+const AddDecks = ({navigation}) => (
   <View>
     <Text>This is the Dashboard</Text>
+    {console.log("in add decks")}
   </View>
 );
 
   const SeeDecks = ({ navigation }) => (
     <View style={styles.fullContainer}>
-      <Test addDeck = {navigation.navigate('AddDecks')}/>
-      <Button  title={'Add New Deck'} onPress = {() => navigation.navigate('AddDecks')}/>
+    {console.log("in seedecks")}
+      <Test/>
+      <Button  title={'Add New Deck'} onPress = {() =>  navigation.navigate('AddDecks')}/>
     </View>
   );
 
@@ -31,19 +33,24 @@ const Stack = StackNavigator({
   },
   AddDecks: {
     screen: AddDecks
-  }
-})
+  },
+},{initialRouteName:'Home'})
+
+
 
 class Navigator extends React.Component {
 
 
+componentDidMount(){
+  loaded = true
+}
 
 
 render(){
   return (
         <Stack />
       );
-}
+    }
 }
 
 
