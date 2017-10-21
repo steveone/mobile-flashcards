@@ -4,6 +4,8 @@ import { Dimensions, ActivityIndicator, TextInput, TouchableNativeFeedback, Asyn
 import { getDecks} from '../utils/api'
 import { setDecks,setLoaded } from '../actions'
 import reducer from '../reducers'
+import { StackNavigator } from 'react-navigation';
+import { NavigationActions } from 'react-navigation'
 
 var STORAGE_KEY = '@mobile-flashcards';
 
@@ -36,7 +38,7 @@ JavaScript: {
 
 
 
-class Test extends React.Component {
+class ShowDecks extends React.Component {
 
   constructor(props) {
     super(props);
@@ -48,51 +50,17 @@ class Test extends React.Component {
   }
 
   componentDidMount() {
-  //  this._loadInitialState().done();
-    //this.props.getDecks(STORAGE_KEY);
     const { width, height } = Dimensions.get('window');
-    console.log(this.props)
     getDecks().then((decks) => this.props.setDecks(JSON.parse(decks)))
-    console.log("get decks")
-    //getDecks().then((decks) => console.log(JSON.parse(decks)))
-    console.log("After get")
-    console.log("going for props")
-    //console.log(this.props.decks)
+    //I want a spinner to show even though loading is fast
     setTimeout(this.props.setLoaded,
     1000
     )
-
-    //console.log(value)
-    //console.log("After value")
   }
 
 
    _loadInitialState() {
-  /*  try {
-      var value = await AsyncStorage.getItem(STORAGE_KEY);
-      if (value !== null){
-  //      Alert.alert("returned value was ")
-        //Alert.alert(value)
-//        this.setState({decks: value});
-        let test = JSON.parse(value)
-        console.log("got initial state")
-      //  console.log(test)
 
-//        this.props.setDecks(test)
-        //console.log(value)
-        //console.log(test['JavasScript'])
-
-        console.log("got props")
-        console.log(this.props.decks)
-      } else {
-        Alert.alert('Initialized with no selection on disk.')
-        //setState({decks:null,lastPlayed:null})
-      }
-    } catch (error) {
-      Alert.alert("there was an error with AsynStorage " + error)
-      console.log(error)
-    }*/
-//getDecks(STORAGE_KEY)
   }
 
 outputLog = () => {
@@ -138,7 +106,7 @@ console.log("next decks")
 console.log(decks)
 return (
 
-  <View  key='11' style={{flex: 1, height:this.height-500, width:this.width-500}}>
+  <View  key='11' style={{flex: 1, height:this.height-500, width:this.width-300}}>
 
   {(this.props.loaded === null) && (
       <ActivityIndicator
@@ -148,9 +116,27 @@ return (
         size='large' />
   )}
 
-<ScrollView style={styles.fullContainer}>
+  <ScrollView style={styles.fullContainer}>
+{decks && Object.keys(decks).map((deck)=>
+  <ScrollView style={styles.fullContainer} key={deck + 'sv'}>
+  <TouchableHighlight key={deck + 'th'} onPress = {this.outputLog.bind(this)}>
+  <Text style={styles.button}>
+  <Text>
+    {deck}
+  </Text>
+  <Text style={styles.buttonText}>
+    {"\n" + JSON.stringify(decks[deck]['questions'].length)} questions
+  </Text>
+  </Text>
+  </TouchableHighlight>
 
-<View style={{top:50, height:300, width:this.width, padding:10}}>
+<Text>
+  </Text>
+
+
+  </ScrollView>
+)}
+<View style={{top:50, height:200, width:this.width, padding:10}}>
   <Text>Create a new deck by entering a title below:</Text>
   <TextInput
     style={{height: 40, width: this.width, borderColor: 'grey',  borderWidth: 1}}
@@ -158,10 +144,10 @@ return (
       value={this.state.text}
     >
     </TextInput>
+
   <Button style={styles.button} title={'Add New Deck'} onPress = {this.outputLog.bind(this)}/>
 </View>
 </ScrollView>
-
 </View>
 
 )}
@@ -176,7 +162,7 @@ const styles = StyleSheet.create({
 //    borderRadius: 20,
     flex: 1,
     height:this.height-500,
-    width:this.width-300,
+    width:this.width,
     padding:10
   },
   container: {
@@ -205,6 +191,7 @@ const styles = StyleSheet.create({
      borderWidth:1
    },
    buttonText: {
+     fontSize: 15,
      padding: 20,
      width: 100,
      height:100,
@@ -230,4 +217,4 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(
   mapStateToProps,mapDispatchToProps
-)(Test)
+)(ShowDecks)

@@ -5,7 +5,7 @@ import { getDecks} from '../utils/api'
 import { setDecks,setLoaded } from '../actions'
 import reducer from '../reducers'
 import { StackNavigator } from 'react-navigation';
-import Test  from '../components/test'
+import ShowDecks  from '../components/showDecks'
 var STORAGE_KEY = '@mobile-flashcards';
 
 
@@ -20,7 +20,7 @@ const AddDecks = ({navigation}) => (
   const SeeDecks = ({ navigation }) => (
     <View style={styles.fullContainer}>
     {console.log("in seedecks")}
-      <Test/>
+      <ShowDecks/>
       <Button  title={'Add New Deck'} onPress = {() =>  navigation.navigate('AddDecks')}/>
     </View>
   );
@@ -69,8 +69,8 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
 //    borderRadius: 20,
     flex: 1,
-    height:this.height,
-    width:this.width,
+    height:this.height-500,
+    width:this.width-300,
     padding:10
   },
 })

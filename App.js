@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Dimensions, ScrollView, Alert, StyleSheet, Text, View, AsyncStorage } from 'react-native';
-import Test from './components/test';
 import Navigator from './components/navigator';
 import { connect,Provider } from 'react-redux'
 import store from './store/store';
@@ -85,8 +84,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    height:this.height,
-    width:this.width,
+    height:this.height-500,
+    width:this.width-300,
     justifyContent:'flex-start',
     backgroundColor: 'transparent',
 
