@@ -6,6 +6,8 @@ import { setDecks,setLoaded } from '../actions'
 import reducer from '../reducers'
 import { StackNavigator } from 'react-navigation';
 import ShowDecks  from '../components/showDecks'
+import Deck  from '../components/deck'
+
 var STORAGE_KEY = '@mobile-flashcards';
 
 
@@ -29,10 +31,16 @@ const AddDecks = ({navigation}) => (
 
 const Stack = StackNavigator({
   Home: {
-    screen: ShowDecks
+    screen: ShowDecks,
+    navigationOptions: ({navigation}) => ({
+      title: `All Decks`,
+    }),
   },
   AddDecks: {
-    screen: AddDecks
+    screen: Deck,
+    navigationOptions: ({navigation}) => ({
+      title: `${navigation.state.params.deck}`,
+    }),
   },
 },{initialRouteName:'Home'})
 

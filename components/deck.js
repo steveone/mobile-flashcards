@@ -11,38 +11,22 @@ var STORAGE_KEY = '@mobile-flashcards';
 
 let loadedState = null
 
-let deck = {
-  React: {
-  title: 'React',
-  questions: [
-    {
-      question: 'What is React?',
-      answer: 'A library for managing user interfaces'
-    },
-    {
-      question: 'Where do you make Ajax requests in React?',
-      answer: 'The componentDidMount lifecycle event'
-    }
-  ]
-},
-JavaScript: {
-  title: 'JavaScript',
-  questions: [
-    {
-      question: 'What is a closure?',
-      answer: 'The combination of a function and the lexical environment within which that function was declared.'
-    }
-  ]
-}
-};
-
 
 
 class Test extends React.Component {
 
+
+
   constructor(props) {
     super(props);
-    this.state = { text: 'Useless Placeholder' };
+    this.state = { text: 'Useless Placeholder',
+    //deckName: navigation.state.params.deck
+    };
+    console.log(this.props)
+  }
+
+  static navigationOptions = {
+    title: 'Deck'
   }
 
   shouldComponentUpdate(prevProps, prevState){
@@ -51,17 +35,15 @@ class Test extends React.Component {
 
   componentDidMount() {
     const { width, height } = Dimensions.get('window');
-    getDecks().then((decks) => this.props.setDecks(JSON.parse(decks)))
+    //getDecks().then((decks) => this.props.setDecks(JSON.parse(decks)))
     //I want a spinner to show even though loading is fast
-    setTimeout(this.props.setLoaded,
-    1000
-    )
   }
 
 
    _loadInitialState() {
 
   }
+
 
 outputLog = () => {
    console.log("got pressed with value " + this.state.text)
@@ -92,6 +74,7 @@ outputLog = () => {
 render(){
 console.log("in render")
 console.log(this.props.decks)
+console.log(this.props.navigation.state.params.deck)
 //console.log(decks)
 //console.log(this.props.loaded)
 const showLoading = (this.props.loaded === null) ? true : false
@@ -103,7 +86,9 @@ if (this.props.decks) {
     decks = null
   }
 console.log("next decks")
-console.log(decks)
+//console.log(decks)
+console.log(this.props)
+
 return (
 
   <View  key='11' style={{flex: 1, height:this.height-500, width:this.width-300}}>

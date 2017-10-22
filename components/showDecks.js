@@ -40,6 +40,8 @@ JavaScript: {
 
 class ShowDecks extends React.Component {
 
+
+
   constructor(props) {
     super(props);
     this.state = { text: 'Useless Placeholder' };
@@ -119,7 +121,7 @@ return (
   <ScrollView style={styles.fullContainer}>
 {decks && Object.keys(decks).map((deck)=>
   <ScrollView style={styles.fullContainer} key={deck + 'sv'}>
-  <TouchableHighlight key={deck + 'th'} onPress = {() =>  this.props.navigation.navigate('AddDecks')}>
+  <TouchableHighlight key={deck + 'th'} onPress = {() =>  this.props.navigation.navigate('AddDecks',{deck:deck})}>
   <Text style={styles.button}>
   <Text>
     {deck}
