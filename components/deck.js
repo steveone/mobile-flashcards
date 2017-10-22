@@ -25,9 +25,7 @@ class Test extends React.Component {
     console.log(this.props)
   }
 
-  static navigationOptions = {
-    title: 'Deck'
-  }
+
 
   shouldComponentUpdate(prevProps, prevState){
     return true
@@ -79,16 +77,20 @@ console.log(this.props.navigation.state.params.deck)
 //console.log(this.props.loaded)
 const showLoading = (this.props.loaded === null) ? true : false
 let decks = null
+let showingDeck = null
 if (this.props.decks) {
   decks = this.props.decks
+  showingDeck = this.props.navigation.state.params.deck
   }
   else {
     decks = null
   }
 console.log("next decks")
-//console.log(decks)
+console.log(decks)
 console.log(this.props)
-
+console.log("showing deck " + showingDeck)
+let questions = (decks != null) ? decks[showingDeck]['questions'] : null
+console.log(questions)
 return (
 
   <View  key='11' style={{flex: 1, height:this.height-500, width:this.width-300}}>
@@ -102,21 +104,20 @@ return (
   )}
 
   <ScrollView style={styles.fullContainer}>
-{decks && Object.keys(decks).map((deck)=>
-  <ScrollView style={styles.fullContainer} key={deck + 'sv'}>
-  <TouchableHighlight key={deck + 'th'} onPress = {this.outputLog.bind(this)}>
+{questions.map((question)=>
+  <ScrollView style={styles.fullContainer} key={question.question + 'sv'}>
+  <TouchableHighlight key={question.question + 'th'} onPress = {this.outputLog.bind(this)}>
   <Text style={styles.button}>
   <Text>
-    {deck}
+    {question.question}
   </Text>
   <Text style={styles.buttonText}>
-    {"\n" + JSON.stringify(decks[deck]['questions'].length)} questions
+    {"\n" }
   </Text>
   </Text>
   </TouchableHighlight>
 
-<Text>
-  </Text>
+
 
 
   </ScrollView>
