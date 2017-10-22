@@ -6,11 +6,12 @@ import { setDecks,setLoaded } from '../actions'
 import reducer from '../reducers'
 import { StackNavigator } from 'react-navigation';
 import { NavigationActions } from 'react-navigation'
+import FlipCard from 'react-native-flip-card'
 
 var STORAGE_KEY = '@mobile-flashcards';
 
 let loadedState = null
-
+let totalQuestions = 0
 
 
 class Test extends React.Component {
@@ -19,7 +20,13 @@ class Test extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { text: 'Useless Placeholder',
+    this.state = {
+      text: 'Useless Placeholder',
+      currentQuestion: 0,
+      totalQuestions:0,
+      right: 0,
+      wrong: 0,
+      done: false,
     //deckName: navigation.state.params.deck
     };
     console.log(this.props)
@@ -69,32 +76,44 @@ outputLog = () => {
      }
     }
 
+nextQuestion = (answer) => {
+let right = this.state.right;
+let wrong = this.state.wrong;
+if (answer == "Right") {
+   Alert.alert("Good Job")
+   right++
+   this.setState({right})
+ }
+else {
+  wrong++
+  Alert.alert("You'll get it next time")
+  this.setState({wrong})
+}
+ current = this.state.currentQuestion
+ current++
+ this.setState({currentQuestion:current})
+ if ((this.state.right + this.state.wrong) == this.state.totalQuestions) {
+   this.setState({done:true})
+ }
+}
+
 render(){
-console.log("in render")
-console.log(this.props.decks)
-console.log(this.props.navigation.state.params.deck)
-//console.log(decks)
-//console.log(this.props.loaded)
 const showLoading = (this.props.loaded === null) ? true : false
 let decks = null
 let showingDeck = null
+let questions = null
+let totalQuestions = 0
 if (this.props.decks) {
   decks = this.props.decks
   showingDeck = this.props.navigation.state.params.deck
   }
-  else {
-    decks = null
-  }
-console.log("next decks")
-console.log(decks)
-console.log(this.props)
+
 console.log("showing deck " + showingDeck)
-let questions = (decks != null) ? decks[showingDeck]['questions'] : null
-console.log(questions)
+questions = (decks !== null) ? decks[showingDeck]['questions'] : null
+totalQuestions = (decks != null) ? decks[showingDeck]['questions'].length : 0
+console.log(totalQuestions)
 return (
-
   <View  key='11' style={{flex: 1, height:this.height-500, width:this.width-300}}>
-
   {(this.props.loaded === null) && (
       <ActivityIndicator
         animating={showLoading}
@@ -102,39 +121,44 @@ return (
         backgroundColor='black'
         size='large' />
   )}
+{questions
+  .filter((element, index) => index == this.state.currentQuestion)
+  .map((question, index)=>
 
-  <ScrollView style={styles.fullContainer}>
-{questions.map((question)=>
   <ScrollView style={styles.fullContainer} key={question.question + 'sv'}>
-  <TouchableHighlight key={question.question + 'th'} onPress = {this.outputLog.bind(this)}>
+  <FlipCard  key ={questions.question + 'fc'}
+    friction={6}
+    perspective={1000}
+    flipHorizontal={true}
+    flipVertical={false}
+    flip={false}
+    clickable={true}
+    onFlipEnd={(isFlipEnd)=>console.log("we flipped")}
+  >
+<View style={styles.face}>
   <Text style={styles.button}>
-  <Text>
-    {question.question}
+     {question.question}
   </Text>
-  <Text style={styles.buttonText}>
-    {"\n" }
-  </Text>
-  </Text>
-  </TouchableHighlight>
-
-
-
-
+  </View>
+  <View style={styles.back}>
+    <Text style={styles.button}>
+      {question.answer}
+    </Text>
+    <Button title="I got it Right :)" onPress = {() =>  this.nextQuestion("Right")}>
+    </Button>
+    <Button title="I got it Wrong :(" onPress = {() =>  this.nextQuestion("Wrong")}>
+    </Button>
+    </View>
+  </FlipCard>
   </ScrollView>
 )}
-<View style={{top:50, height:200, width:this.width, padding:10}}>
-  <Text>Create a new deck by entering a title below:</Text>
-  <TextInput
-    style={{height: 40, width: this.width, borderColor: 'grey',  borderWidth: 1}}
-    onChangeText={(text) => this.setState({text})}
-      value={this.state.text}
-    >
-    </TextInput>
 
-  <Button style={styles.button} title={'Add New Deck'} onPress = {this.outputLog.bind(this)}/>
-</View>
-</ScrollView>
+{(this.state.done) &&
+  <Text> Good Job, you have completed the quiz. {'\n'}
+   You got {this.state.right} Correct and {this.state.wrong} incorrect.
+  </Text>
 
+}
 </View>
 
 )}
@@ -178,12 +202,19 @@ const styles = StyleSheet.create({
      borderWidth:1
    },
    buttonText: {
-     fontSize: 15,
-     padding: 20,
-     width: 100,
+     textAlignVertical:'center',
+     textAlign:'center',
+     fontSize:30,
+     padding: 5,
+     marginBottom: 3,
+     marginTop:3,
+     width: this.width/2,
      height:100,
-     color: 'white'
-   }
+     alignItems: 'center',
+     backgroundColor: '#2196F3',
+     borderColor: 'blue',
+     borderWidth:1
+   },
 })
 
 
