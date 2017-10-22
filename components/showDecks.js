@@ -91,7 +91,7 @@ outputLog = () => {
 
 render(){
 console.log("in render")
-console.log(this.props.decks)
+//console.log(this.props.decks)
 //console.log(decks)
 //console.log(this.props.loaded)
 const showLoading = (this.props.loaded === null) ? true : false
@@ -119,7 +119,7 @@ return (
   <ScrollView style={styles.fullContainer}>
 {decks && Object.keys(decks).map((deck)=>
   <ScrollView style={styles.fullContainer} key={deck + 'sv'}>
-  <TouchableHighlight key={deck + 'th'} onPress = {this.outputLog.bind(this)}>
+  <TouchableHighlight key={deck + 'th'} onPress = {() =>  this.props.navigation.navigate('AddDecks')}>
   <Text style={styles.button}>
   <Text>
     {deck}
@@ -145,7 +145,6 @@ return (
     >
     </TextInput>
 
-  <Button style={styles.button} title={'Add New Deck'} onPress = {this.outputLog.bind(this)}/>
 </View>
 </ScrollView>
 </View>
@@ -155,7 +154,7 @@ return (
 
 const styles = StyleSheet.create({
   fullContainer: {
-    top:25,
+//    top:0,
 //    backgroundColor: 'red',
     borderColor: 'black',
     borderStyle: 'solid',
@@ -163,7 +162,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height:this.height-500,
     width:this.width,
-    padding:10
+  //  padding:10
   },
   container: {
     top:20,

@@ -21,7 +21,7 @@ const AddDecks = ({navigation}) => (
     <View style={styles.fullContainer}>
     {console.log("in seedecks")}
       <ShowDecks/>
-      <Button  title={'Add New Deck'} onPress = {() =>  navigation.navigate('AddDecks')}/>
+      <Button style={styles.button} title={'Add New Deck'} onPress = {() =>  navigation.navigate('AddDecks')}/>
     </View>
   );
 
@@ -29,7 +29,7 @@ const AddDecks = ({navigation}) => (
 
 const Stack = StackNavigator({
   Home: {
-    screen: SeeDecks
+    screen: ShowDecks
   },
   AddDecks: {
     screen: AddDecks
@@ -54,16 +54,29 @@ render(){
 }
 
 
+const mapStateToProps = ((state) => (
+  {
+   decks: state.decks,
+   loaded: state.loaded,
+}));
+
+function mapDispatchToProps(dispatch) {
+  return{
+    setDecks: (data) => dispatch(setDecks(data)),
+    setLoaded: () => dispatch(setLoaded())
+  }
+}
 
 
 export default connect(
-
+  mapStateToProps,mapDispatchToProps
 )(Navigator)
+
 
 
 const styles = StyleSheet.create({
   fullContainer: {
-    top:25,
+    top:0,
 //    backgroundColor: 'red',
     borderColor: 'black',
     borderStyle: 'solid',
@@ -73,4 +86,18 @@ const styles = StyleSheet.create({
     width:this.width-300,
     padding:10
   },
+  button: {
+     textAlignVertical:'center',
+     textAlign:'center',
+     fontSize:30,
+     padding: 5,
+     marginBottom: 3,
+     marginTop:3,
+     width: this.width/2,
+     height:200,
+     alignItems: 'center',
+     backgroundColor: '#2196F3',
+     borderColor: 'blue',
+     borderWidth:1
+   },
 })
