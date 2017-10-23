@@ -1,12 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, ActivityIndicator, TextInput, TouchableNativeFeedback, AsyncStorage, Alert, ScrollView, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
+import { Modal, Dimensions, ActivityIndicator, TextInput, TouchableNativeFeedback, AsyncStorage, Alert, ScrollView, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
 import { getDecks} from '../utils/api'
 import { setDecks,setLoaded } from '../actions'
 import reducer from '../reducers'
 import { StackNavigator } from 'react-navigation';
 import { NavigationActions } from 'react-navigation'
 import FlipCard from 'react-native-flip-card'
+//import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Icon } from 'react-native-elements'
 
 var STORAGE_KEY = '@mobile-flashcards';
 
@@ -27,6 +29,7 @@ class Test extends React.Component {
       right: 0,
       wrong: 0,
       done: false,
+      modalVisible: false,
     //deckName: navigation.state.params.deck
     };
     console.log(this.props)
@@ -98,26 +101,48 @@ restartQuiz = () => {
   console.log("the quiz should be restarting")
 }
 
+closeModal = () => {
+  this.setState({modalVisible:false})
+  let right = this.state.right;
+  let wrong = this.state.wrong;
+  let current = this.state.currentQuestion
+  current++
+  console.log("current question = " + current)
+  this.setState({currentQuestion:current})
+  let totalAnswered = (right + wrong)
+  console.log("total answered is " + totalAnswered)
+  console.log(totalAnswered)
+  console.log(this.state.totalQuestions)
+  if (totalAnswered === this.state.totalQuestions) {
+    this.setState({done:true})
+    console.log("setting done to true")
+  }
+}
+
+moveToNextQuestion = () => {
+
+  setTimeout(()=>{this.closeModal()} , 2000)
+}
+
 nextQuestion = (answer) => {
 let right = this.state.right;
 let wrong = this.state.wrong;
-if (answer == "Right") {
-   Alert.alert("Good Job")
+
+if (answer === "Right") {
+//   Alert.alert("Good job")
    right++
-   this.setState({right})
+   console.log("right is now " + right)
+//   this.setState({right})
  }
 else {
-  Alert.alert("You'll get it next time")
+  //Alert.alert("You'll get it next time")
   wrong++
-  this.setState({wrong})
-}
- current = this.state.currentQuestion
- current++
- this.setState({currentQuestion:current})
- let totalAnswered = right + wrong
- if (totalAnswered === this.state.totalQuestions) {
-   this.setState({done:true})
- }
+  console.log("wrong is now " + wrong)
+//  this.setState({wrong})
+  }
+//setTimeout(this.moveToNextQuestion(),1000)
+this.setState({modalVisible:true,right,wrong})
+this.moveToNextQuestion()
 }
 
 render(){
@@ -133,7 +158,6 @@ if (this.props.decks) {
   totalQuestions = this.props.navigation.state.params.totalQuestions
   }
 
-console.log("showing deck " + showingDeck)
 questions = (decks !== null) ? decks[showingDeck]['questions'] : null
 
 console.log(totalQuestions)
@@ -151,6 +175,17 @@ return (
   .map((question, index)=>
 
   <ScrollView style={styles.fullContainer} key={question.question + 'sv'}>
+  <Modal animationType="fade"
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => console.log("closing modal")}
+          >
+        <ScrollView style={styles.fullContainer}>
+          <Text style={styles.button}>Good Job
+           <Icon name="mood" style={{width:100,height:100}}/>
+          </Text>
+        </ScrollView>
+    </Modal>
   <FlipCard  key ={questions.question + 'fc'}
     friction={6}
     perspective={1000}
