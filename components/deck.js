@@ -1,42 +1,51 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Modal, Dimensions, ActivityIndicator, TextInput, TouchableNativeFeedback, AsyncStorage, Alert, ScrollView, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
+import { Dimensions, ActivityIndicator, TextInput, TouchableNativeFeedback, AsyncStorage, Alert, ScrollView, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
 import { getDecks} from '../utils/api'
 import { setDecks,setLoaded } from '../actions'
 import reducer from '../reducers'
 import { StackNavigator } from 'react-navigation';
 import { NavigationActions } from 'react-navigation'
-import FlipCard from 'react-native-flip-card'
-//import Icon from 'react-native-vector-icons/MaterialIcons';
-import { Icon } from 'react-native-elements'
 
 var STORAGE_KEY = '@mobile-flashcards';
 
 let loadedState = null
-let totalQuestions = 0
+
+let deck = {
+  React: {
+  title: 'React',
+  questions: [
+    {
+      question: 'What is React?',
+      answer: 'A library for managing user interfaces'
+    },
+    {
+      question: 'Where do you make Ajax requests in React?',
+      answer: 'The componentDidMount lifecycle event'
+    }
+  ]
+},
+JavaScript: {
+  title: 'JavaScript',
+  questions: [
+    {
+      question: 'What is a closure?',
+      answer: 'The combination of a function and the lexical environment within which that function was declared.'
+    }
+  ]
+}
+};
 
 
-class Test extends React.Component {
+
+class Deck extends React.Component {
 
 
 
   constructor(props) {
     super(props);
-    this.state = {
-      text: 'Useless Placeholder',
-      currentQuestion: 0,
-      totalQuestions:0,
-      right: 0,
-      wrong: 0,
-      done: false,
-      modalVisible: false,
-      lastAnswer:null,
-    //deckName: navigation.state.params.deck
-    };
-    console.log(this.props)
+    this.state = { text: 'Useless Placeholder' };
   }
-
-
 
   shouldComponentUpdate(prevProps, prevState){
     return true
@@ -65,7 +74,6 @@ class Test extends React.Component {
 
   }
 
-
 outputLog = () => {
    console.log("got pressed with value " + this.state.text)
    //this._saveToAsyncStorage()
@@ -92,78 +100,25 @@ outputLog = () => {
      }
     }
 
-restartQuiz = () => {
-  this.setState({
-    wrong:0,
-    right:0,
-    currentQuestion:0,
-    done:false,
-  })
-  console.log("the quiz should be restarting")
-}
-
-closeModal = () => {
-  this.setState({modalVisible:false})
-  let right = this.state.right;
-  let wrong = this.state.wrong;
-  let current = this.state.currentQuestion
-  current++
-  console.log("current question = " + current)
-  this.setState({currentQuestion:current})
-  let totalAnswered = (right + wrong)
-  console.log("total answered is " + totalAnswered)
-  console.log(totalAnswered)
-  console.log(this.state.totalQuestions)
-  if (totalAnswered === this.state.totalQuestions) {
-    this.setState({done:true})
-    console.log("setting done to true")
-  }
-}
-
-moveToNextQuestion = () => {
-
-  setTimeout(()=>{this.closeModal()} , 2000)
-}
-
-nextQuestion = (answer) => {
-let right = this.state.right;
-let wrong = this.state.wrong;
-let lastAnswer = answer;
-if (answer === "Right") {
-//   Alert.alert("Good job")
-   right++
-   console.log("right is now " + right)
-//   this.setState({right})
- }
-else {
-  //Alert.alert("You'll get it next time")
-  wrong++
-  console.log("wrong is now " + wrong)
-//  this.setState({wrong})
-  }
-//setTimeout(this.moveToNextQuestion(),1000)
-this.setState({modalVisible:true,right,wrong,lastAnswer:answer})
-this.moveToNextQuestion()
-}
-
 render(){
-const {goBack} = this.props.navigation;
+console.log("in render")
+//console.log(this.props.decks)
+//console.log(decks)
+//console.log(this.props.loaded)
 const showLoading = (this.props.loaded === null) ? true : false
 let decks = null
-let showingDeck = null
-let questions = null
-let totalQuestions = 0
 if (this.props.decks) {
   decks = this.props.decks
-  showingDeck = this.props.navigation.state.params.deck
-  totalQuestions = this.props.navigation.state.params.totalQuestions
   }
-
-questions = (decks !== null) ? decks[showingDeck]['questions'] : null
-
-console.log(totalQuestions)
+  else {
+    decks = null
+  }
+console.log("next decks")
+console.log(decks)
 return (
+
   <View  key='11' style={{flex: 1, height:this.height-500, width:this.width-300}}>
+
   {(this.props.loaded === null) && (
       <ActivityIndicator
         animating={showLoading}
@@ -171,63 +126,46 @@ return (
         backgroundColor='black'
         size='large' />
   )}
-{questions
-  .filter((element, index) => index == this.state.currentQuestion)
-  .map((question, index)=>
 
-  <ScrollView style={styles.fullContainer} key={question.question + 'sv'}>
-  <Modal animationType="fade"
-          transparent={false}
-          visible={this.state.modalVisible}
-          onRequestClose={() => console.log("closing modal")}
-          >
-        <ScrollView style={styles.fullContainer}>
-          <Text style={styles.buttonLarge}>
-          {(this.state.lastAnswer == 'Right') ? "Good Job" : "You'll get it next time"}
-           {'\n'}
-           <Icon name="mood" style={{width:100,height:100}}/>
-          </Text>
-        </ScrollView>
-    </Modal>
-  <FlipCard  key ={questions.question + 'fc'}
-    friction={6}
-    perspective={1000}
-    flipHorizontal={true}
-    flipVertical={false}
-    flip={false}
-    clickable={true}
-    onFlipEnd={(isFlipEnd)=>console.log("we flipped")}
-  >
-<View style={styles.face}>
+  <ScrollView style={styles.fullContainer}>
+{decks && Object.keys(decks)
+  .filter((deck, index) => deck == this.props.navigation.state.params.deck)
+  .map((deck)=>
+  <ScrollView style={styles.fullContainer} key={deck + 'sv'}>
+  <TouchableHighlight key={deck + 'th'} onPress = {() =>  this.props.navigation.navigate('Quiz',{
+    deck:deck,
+    totalQuestions:decks[deck]['questions'].length
+  })}>
   <Text style={styles.button}>
-     {question.question}
+  <Text>
+    {deck}
   </Text>
-  </View>
-  <View style={styles.back}>
-    <Text style={styles.button}>
-      {question.answer}
+  <Text style={styles.buttonText}>
+  {"\n" + JSON.stringify(decks[deck]['questions'].length)} questions
+  </Text>
+  <Text style={styles.buttonTextBlack}>
+  {"\n"} Click to take quiz
     </Text>
-    <Button title="I got it Right :)" onPress = {() =>  this.nextQuestion("Right")}>
-    </Button>
-    <Button title="I got it Wrong :(" onPress = {() =>  this.nextQuestion("Wrong")}>
-    </Button>
-    </View>
-  </FlipCard>
+  </Text>
+  </TouchableHighlight>
+
+  <TouchableHighlight key={deck + 'aq'} onPress = {() =>  this.props.navigation.navigate('AddQuestion',{
+    deck:deck,
+    totalQuestions:decks[deck]['questions'].length
+  })}>
+  <Text style={styles.buttonSmall}>
+  <Text>
+    Add question/answer to {deck}
+  </Text>
+
+  </Text>
+  </TouchableHighlight>
+
+
   </ScrollView>
 )}
 
-{(this.state.done === true) &&
-  <View style={styles.fullContainer} key={'quizDone'}>
-  <Text style={styles.completed}>You have completed the quiz. {'\n'}
-   You got {this.state.right} Correct and {this.state.wrong} incorrect.
-  </Text>
-  <Button title="Restart" onPress = {() => this.restartQuiz()}>
-  </Button>
-  <Button title="Back to Deck list" onPress = {() => goBack()}>
-  </Button>
-  </View>
-
-}
+</ScrollView>
 </View>
 
 )}
@@ -235,7 +173,7 @@ return (
 
 const styles = StyleSheet.create({
   fullContainer: {
-    top:25,
+//    top:0,
 //    backgroundColor: 'red',
     borderColor: 'black',
     borderStyle: 'solid',
@@ -243,7 +181,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height:this.height-500,
     width:this.width,
-    padding:10
+  //  padding:10
   },
   container: {
     top:20,
@@ -270,35 +208,7 @@ const styles = StyleSheet.create({
      borderColor: 'blue',
      borderWidth:1
    },
-   buttonLarge: {
-      textAlignVertical:'center',
-      textAlign:'center',
-      fontSize:30,
-      padding: 5,
-      marginBottom: 3,
-      marginTop:3,
-      width: this.width/2,
-      height:300,
-      alignItems: 'center',
-      backgroundColor: '#2196F3',
-      borderColor: 'blue',
-      borderWidth:1
-    },
-   buttonText: {
-     textAlignVertical:'center',
-     textAlign:'center',
-     fontSize:30,
-     padding: 5,
-     marginBottom: 3,
-     marginTop:3,
-     width: this.width/2,
-     height:100,
-     alignItems: 'center',
-     backgroundColor: '#2196F3',
-     borderColor: 'blue',
-     borderWidth:1
-   },
-   completed: {
+   buttonSmall: {
       textAlignVertical:'center',
       textAlign:'center',
       fontSize:20,
@@ -306,12 +216,26 @@ const styles = StyleSheet.create({
       marginBottom: 3,
       marginTop:3,
       width: this.width/2,
-      height:200,
+      height:50,
       alignItems: 'center',
       backgroundColor: '#2196F3',
       borderColor: 'blue',
       borderWidth:1
     },
+   buttonText: {
+     fontSize: 15,
+     padding: 20,
+     width: 100,
+     height:100,
+     color: 'white'
+   },
+   buttonTextBlack: {
+        fontSize: 30,
+        padding: 20,
+        width: 100,
+        height:100,
+        color: 'black'
+      }
 })
 
 
@@ -332,4 +256,4 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(
   mapStateToProps,mapDispatchToProps
-)(Test)
+)(Deck)

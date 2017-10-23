@@ -38,13 +38,16 @@ JavaScript: {
 
 
 
-class ShowDecks extends React.Component {
+class AddQuestion extends React.Component {
 
 
 
   constructor(props) {
     super(props);
-    this.state = { text: 'Useless Placeholder' };
+    this.state = {
+      newAnswer: null,
+      newQuestion:null
+    };
   }
 
   shouldComponentUpdate(prevProps, prevState){
@@ -91,6 +94,20 @@ outputLog = () => {
      }
     }
 
+saveQuestionToDeck = () => {
+  deck = this.props.navigation.state.params.deck
+  newQuestion = this.state.newQuestion
+  newAnswer = this.state.newAnswer
+
+  console.log("Saving question " + newQuestion)
+  console.log("With Answer " + newAnswer)
+  console.log("To Deck " + deck)
+
+
+  this.setState({newQuestion:null,newAnswer:null})
+}
+
+
 render(){
 console.log("in render")
 //console.log(this.props.decks)
@@ -119,38 +136,47 @@ return (
   )}
 
   <ScrollView style={styles.fullContainer}>
-{decks && Object.keys(decks).map((deck)=>
+{decks && Object.keys(decks)
+  .filter((deck, index) => deck == this.props.navigation.state.params.deck)
+  .map((deck)=>
   <ScrollView style={styles.fullContainer} key={deck + 'sv'}>
-  <TouchableHighlight key={deck + 'th'} onPress = {() =>  this.props.navigation.navigate('Deck',{
-    deck:deck,
-    totalQuestions:decks[deck]['questions'].length
-  })}>
+
   <Text style={styles.button}>
   <Text>
-    {deck}
+    Adding Questions/Answers to "{deck}" deck
   </Text>
   <Text style={styles.buttonText}>
-    {"\n" + JSON.stringify(decks[deck]['questions'].length)} questions
+    {"\n"} Currently {JSON.stringify(decks[deck]['questions'].length)} questions
   </Text>
   </Text>
-  </TouchableHighlight>
 
-<Text>
-  </Text>
+  <View style={{top:50, height:200, width:this.width, padding:10}}>
+    <Text>Enter New Question below:</Text>
+    <TextInput
+      style={{height: 40, width: this.width, borderColor: 'grey',  borderWidth: 1}}
+      onChangeText={(newQuestion) => this.setState({newQuestion})}
+        value={this.state.newQuestion}
+      >
+      </TextInput>
+      <Text>Enter Answer below:</Text>
+      <TextInput
+        style={{height: 40, width: this.width, borderColor: 'grey',  borderWidth: 1}}
+        onChangeText={(newAnswer) => this.setState({newAnswer})}
+          value={this.state.newAnswer}
+        >
+        </TextInput>
+        <TouchableHighlight key={deck + 'aq'} onPress = {() =>  this.saveQuestionToDeck()}>
+        <Text style={styles.button}>
+        <Text style={styles.buttonText}>
+          Save Question/Answer to {deck}
+        </Text>
 
-
+        </Text>
+        </TouchableHighlight>
+</View>
   </ScrollView>
 )}
-<View style={{top:50, height:200, width:this.width, padding:10}}>
-  <Text>Create a new deck by entering a title below:</Text>
-  <TextInput
-    style={{height: 40, width: this.width, borderColor: 'grey',  borderWidth: 1}}
-    onChangeText={(text) => this.setState({text})}
-      value={this.state.text}
-    >
-    </TextInput>
 
-</View>
 </ScrollView>
 </View>
 
@@ -221,4 +247,4 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(
   mapStateToProps,mapDispatchToProps
-)(ShowDecks)
+)(AddQuestion)

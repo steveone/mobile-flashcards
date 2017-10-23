@@ -7,7 +7,8 @@ import reducer from '../reducers'
 import { StackNavigator } from 'react-navigation';
 import ShowDecks  from '../components/showDecks'
 import Deck  from '../components/deck'
-
+import Quiz from '../components/quiz'
+import AddQuestion from '../components/addQuestion'
 var STORAGE_KEY = '@mobile-flashcards';
 
 
@@ -33,13 +34,25 @@ const Stack = StackNavigator({
   Home: {
     screen: ShowDecks,
     navigationOptions: ({navigation}) => ({
-      title: `All Decks`,
+      title: `Show All Decks`,
     }),
   },
-  AddDecks: {
+  Deck: {
     screen: Deck,
     navigationOptions: ({navigation}) => ({
-      title: `${navigation.state.params.deck}`,
+      title: `Showing Deck: ${navigation.state.params.deck}`,
+    }),
+  },
+  Quiz: {
+    screen: Quiz,
+    navigationOptions: ({navigation}) => ({
+      title: `Quiz on: ${navigation.state.params.deck}`,
+    }),
+  },
+  AddQuestion: {
+    screen: AddQuestion,
+    navigationOptions: ({navigation}) => ({
+      title: `Adding Q/A - Deck ${navigation.state.params.deck}`,
     }),
   },
 },{initialRouteName:'Home'})
