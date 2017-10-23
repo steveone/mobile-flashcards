@@ -30,6 +30,7 @@ class Test extends React.Component {
       wrong: 0,
       done: false,
       modalVisible: false,
+      lastAnswer:null,
     //deckName: navigation.state.params.deck
     };
     console.log(this.props)
@@ -127,7 +128,7 @@ moveToNextQuestion = () => {
 nextQuestion = (answer) => {
 let right = this.state.right;
 let wrong = this.state.wrong;
-
+let lastAnswer = answer;
 if (answer === "Right") {
 //   Alert.alert("Good job")
    right++
@@ -141,7 +142,7 @@ else {
 //  this.setState({wrong})
   }
 //setTimeout(this.moveToNextQuestion(),1000)
-this.setState({modalVisible:true,right,wrong})
+this.setState({modalVisible:true,right,wrong,lastAnswer:answer})
 this.moveToNextQuestion()
 }
 
@@ -181,7 +182,9 @@ return (
           onRequestClose={() => console.log("closing modal")}
           >
         <ScrollView style={styles.fullContainer}>
-          <Text style={styles.button}>Good Job
+          <Text style={styles.buttonLarge}>
+          {(this.state.lastAnswer == 'Right') ? "Good Job" : "You'll get it next time"}
+           {'\n'}
            <Icon name="mood" style={{width:100,height:100}}/>
           </Text>
         </ScrollView>
@@ -267,6 +270,20 @@ const styles = StyleSheet.create({
      borderColor: 'blue',
      borderWidth:1
    },
+   buttonLarge: {
+      textAlignVertical:'center',
+      textAlign:'center',
+      fontSize:30,
+      padding: 5,
+      marginBottom: 3,
+      marginTop:3,
+      width: this.width/2,
+      height:300,
+      alignItems: 'center',
+      backgroundColor: '#2196F3',
+      borderColor: 'blue',
+      borderWidth:1
+    },
    buttonText: {
      textAlignVertical:'center',
      textAlign:'center',
