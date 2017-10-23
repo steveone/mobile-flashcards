@@ -40,8 +40,20 @@ class Test extends React.Component {
 
   componentDidMount() {
     const { width, height } = Dimensions.get('window');
-    //getDecks().then((decks) => this.props.setDecks(JSON.parse(decks)))
-    //I want a spinner to show even though loading is fast
+    if (this.props.decks) {
+      decks = this.props.decks
+      showingDeck = this.props.navigation.state.params.deck
+      totalQuestions = this.props.navigation.state.params.totalQuestions
+      }
+    if ((decks !== null) && (showingDeck !== null)) {
+      totalQuestions = decks[showingDeck]['questions'].length
+    }
+    else {
+      totalQuestions = 0
+    }
+    if (this.state.totalQuestions !== totalQuestions) {
+      this.setState({totalQuestions})
+    }
   }
 
 
@@ -76,6 +88,16 @@ outputLog = () => {
      }
     }
 
+restartQuiz = () => {
+  this.setState({
+    wrong:0,
+    right:0,
+    currentQuestion:0,
+    done:false,
+  })
+  console.log("the quiz should be restarting")
+}
+
 nextQuestion = (answer) => {
 let right = this.state.right;
 let wrong = this.state.wrong;
@@ -85,19 +107,21 @@ if (answer == "Right") {
    this.setState({right})
  }
 else {
-  wrong++
   Alert.alert("You'll get it next time")
+  wrong++
   this.setState({wrong})
 }
  current = this.state.currentQuestion
  current++
  this.setState({currentQuestion:current})
- if ((this.state.right + this.state.wrong) == this.state.totalQuestions) {
+ let totalAnswered = right + wrong
+ if (totalAnswered === this.state.totalQuestions) {
    this.setState({done:true})
  }
 }
 
 render(){
+const {goBack} = this.props.navigation;
 const showLoading = (this.props.loaded === null) ? true : false
 let decks = null
 let showingDeck = null
@@ -106,11 +130,12 @@ let totalQuestions = 0
 if (this.props.decks) {
   decks = this.props.decks
   showingDeck = this.props.navigation.state.params.deck
+  totalQuestions = this.props.navigation.state.params.totalQuestions
   }
 
 console.log("showing deck " + showingDeck)
 questions = (decks !== null) ? decks[showingDeck]['questions'] : null
-totalQuestions = (decks != null) ? decks[showingDeck]['questions'].length : 0
+
 console.log(totalQuestions)
 return (
   <View  key='11' style={{flex: 1, height:this.height-500, width:this.width-300}}>
@@ -153,10 +178,16 @@ return (
   </ScrollView>
 )}
 
-{(this.state.done) &&
-  <Text> Good Job, you have completed the quiz. {'\n'}
+{(this.state.done === true) &&
+  <View style={styles.fullContainer} key={'quizDone'}>
+  <Text style={styles.completed}>You have completed the quiz. {'\n'}
    You got {this.state.right} Correct and {this.state.wrong} incorrect.
   </Text>
+  <Button title="Restart" onPress = {() => this.restartQuiz()}>
+  </Button>
+  <Button title="Back to Deck list" onPress = {() => goBack()}>
+  </Button>
+  </View>
 
 }
 </View>
@@ -215,6 +246,20 @@ const styles = StyleSheet.create({
      borderColor: 'blue',
      borderWidth:1
    },
+   completed: {
+      textAlignVertical:'center',
+      textAlign:'center',
+      fontSize:20,
+      padding: 5,
+      marginBottom: 3,
+      marginTop:3,
+      width: this.width/2,
+      height:200,
+      alignItems: 'center',
+      backgroundColor: '#2196F3',
+      borderColor: 'blue',
+      borderWidth:1
+    },
 })
 
 

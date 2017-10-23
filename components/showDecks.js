@@ -121,7 +121,10 @@ return (
   <ScrollView style={styles.fullContainer}>
 {decks && Object.keys(decks).map((deck)=>
   <ScrollView style={styles.fullContainer} key={deck + 'sv'}>
-  <TouchableHighlight key={deck + 'th'} onPress = {() =>  this.props.navigation.navigate('AddDecks',{deck:deck})}>
+  <TouchableHighlight key={deck + 'th'} onPress = {() =>  this.props.navigation.navigate('AddDecks',{
+    deck:deck,
+    totalQuestions:decks[deck]['questions'].length
+  })}>
   <Text style={styles.button}>
   <Text>
     {deck}
