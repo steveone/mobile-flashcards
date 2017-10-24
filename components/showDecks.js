@@ -107,7 +107,7 @@ if (this.props.decks) {
   else {
     decks = null
   }
-console.log("next decks")
+console.log("in sow decks")
 console.log(decks)
 return (
 

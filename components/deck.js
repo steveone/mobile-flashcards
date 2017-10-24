@@ -102,8 +102,9 @@ outputLog = () => {
 
 render(){
 console.log("in render")
-//console.log(this.props.decks)
-//console.log(decks)
+console.log(this.props.decks)
+let t = JSON.stringify(this.props.decks)
+console.log(t)
 //console.log(this.props.loaded)
 const showLoading = (this.props.loaded === null) ? true : false
 let decks = null
@@ -141,7 +142,7 @@ return (
     {deck}
   </Text>
   <Text style={styles.buttonText}>
-  {"\n" + JSON.stringify(decks[deck]['questions'].length)} questions
+  {"\n"} {decks[deck]['questions'].length} questions
   </Text>
   <Text style={styles.buttonTextBlack}>
   {"\n"} Click to take quiz
