@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { Dimensions, ActivityIndicator, TextInput, TouchableNativeFeedback, AsyncStorage, Alert, ScrollView, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
-import { getDecks} from '../utils/api'
-import { setDecks,setLoaded } from '../actions'
+import { removeDecks,updateDecks,getDecks} from '../utils/api'
+import { setDecks,setLoaded,saveNewQuestion } from '../actions'
 import reducer from '../reducers'
 import { StackNavigator } from 'react-navigation';
 import { NavigationActions } from 'react-navigation'
@@ -11,36 +11,7 @@ var STORAGE_KEY = '@mobile-flashcards';
 
 let loadedState = null
 
-let deck = {
-  React: {
-  title: 'React',
-  questions: [
-    {
-      question: 'What is React?',
-      answer: 'A library for managing user interfaces'
-    },
-    {
-      question: 'Where do you make Ajax requests in React?',
-      answer: 'The componentDidMount lifecycle event'
-    }
-  ]
-},
-JavaScript: {
-  title: 'JavaScript',
-  questions: [
-    {
-      question: 'What is a closure?',
-      answer: 'The combination of a function and the lexical environment within which that function was declared.'
-    }
-  ]
-}
-};
-
-
-
 class AddQuestion extends React.Component {
-
-
 
   constructor(props) {
     super(props);
@@ -56,7 +27,7 @@ class AddQuestion extends React.Component {
 
   componentDidMount() {
     const { width, height } = Dimensions.get('window');
-    getDecks().then((decks) => this.props.setDecks(JSON.parse(decks)))
+    //getDecks().then((decks) => this.props.setDecks(JSON.parse(decks)))
     //I want a spinner to show even though loading is fast
     setTimeout(this.props.setLoaded,
     1000
@@ -68,15 +39,13 @@ class AddQuestion extends React.Component {
 
   }
 
-outputLog = () => {
-   console.log("got pressed with value " + this.state.text)
-   //this._saveToAsyncStorage()
- }
+
 
   async  _saveToAsyncStorage() {
      try {
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(deck));
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(this.state.deck));
       //Alert.alert('Saved selection to disk');
+      Alert.alert("written to async storage")
     } catch (error) {
      Alert.alert('AsyncStorage error: ' + error.message);
     }
@@ -103,6 +72,45 @@ saveQuestionToDeck = () => {
   console.log("With Answer " + newAnswer)
   console.log("To Deck " + deck)
 
+  let data={
+    deck,
+    question:newQuestion,
+    answer:newAnswer,
+  }
+
+  let decks = this.props.decks
+  console.log("deck is " + deck)
+  let newQuestion = {
+    question: newQuestion,
+    answer: newAnswer
+  }
+  let retVal = Object.assign({},decks)
+      Object.keys(retVal).map( (currentValue, index, arry) => {
+        console.log("currentValue" + currentValue)
+          if (currentValue === deck) {
+            console.log("in if")
+            console.log(retVal[currentValue])
+            console.log(newQuestion)
+            let questionCount = retVal[currentValue].questions.length
+              retVal[currentValue].questions.push(newQuestion);
+              console.log("in if where deck was found")
+              console.log(retVal)
+              return retVal
+            }
+            else { return retVal[index]}
+        });
+  console.log("before remove decks")
+  console.log(retVal)
+  console.log("still before removing deck")
+  removeDecks().then(() => updateDecks(retVal))
+
+  try{
+    console.log(this.props)
+    this.props.saveNewQuestion(data)
+  } catch(error){
+  //Alert.alert('redux error: ' + error.message);
+  console.log(error.message)
+ }
 
   this.setState({newQuestion:null,newAnswer:null})
 }
@@ -150,7 +158,7 @@ return (
   </Text>
   </Text>
 
-  <View style={{top:50, height:200, width:this.width, padding:10}}>
+  <View style={{top:50, height:300, width:this.width, padding:10}}>
     <Text>Enter New Question below:</Text>
     <TextInput
       style={{height: 40, width: this.width, borderColor: 'grey',  borderWidth: 1}}
@@ -166,7 +174,7 @@ return (
         >
         </TextInput>
         <TouchableHighlight key={deck + 'aq'} onPress = {() =>  this.saveQuestionToDeck()}>
-        <Text style={styles.button}>
+        <Text style={styles.buttonSmall}>
         <Text style={styles.buttonText}>
           Save Question/Answer to {deck}
         </Text>
@@ -204,7 +212,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     width:50,
-    height: 50,
+    height: 150,
   },
   button: {
      textAlignVertical:'center',
@@ -214,18 +222,34 @@ const styles = StyleSheet.create({
      marginBottom: 3,
      marginTop:3,
      width: this.width/2,
-     height:100,
+     height:150,
      alignItems: 'center',
      backgroundColor: '#2196F3',
      borderColor: 'blue',
      borderWidth:1
    },
+   buttonSmall: {
+      textAlignVertical:'center',
+      textAlign:'center',
+      fontSize:30,
+      padding: 5,
+      marginBottom: 3,
+      marginTop:3,
+      width: this.width/2,
+      height:50,
+      alignItems: 'center',
+      backgroundColor: '#2196F3',
+      borderColor: 'blue',
+      borderWidth:1
+    },
    buttonText: {
      fontSize: 15,
      padding: 20,
      width: 100,
-     height:100,
-     color: 'white'
+     height:50,
+     color: 'white',
+     textAlignVertical:'center',
+     textAlign:'center'
    }
 })
 
@@ -240,7 +264,8 @@ const mapStateToProps = ((state) => (
 function mapDispatchToProps(dispatch) {
   return{
     setDecks: (data) => dispatch(setDecks(data)),
-    setLoaded: () => dispatch(setLoaded())
+    setLoaded: () => dispatch(setLoaded()),
+    saveNewQuestion: (data) => dispatch(saveNewQuestion(data)),
   }
 }
 

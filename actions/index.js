@@ -4,13 +4,11 @@ import getDecksFromAPI from '../utils/api'
 import {
   ADD_DECKS,
   SET_LOADED,
+  SAVE_NEW_QUESTION,
 //  SET_DECKS,
 } from './types';
 
 export function setDecks (data) {
-  console.log("in action")
-  console.log(data)
-  console.log("out action")
   return{
     type: ADD_DECKS,
     data
@@ -21,6 +19,13 @@ export function setLoaded(){
   return{
     type:SET_LOADED,
     loaded: true
+  }
+}
+
+export function saveNewQuestion(data){
+  return {
+    type:SAVE_NEW_QUESTION,
+    data
   }
 }
 

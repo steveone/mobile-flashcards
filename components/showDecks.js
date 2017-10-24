@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { Dimensions, ActivityIndicator, TextInput, TouchableNativeFeedback, AsyncStorage, Alert, ScrollView, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
-import { getDecks} from '../utils/api'
+import { getDecks,removeDecks} from '../utils/api'
 import { setDecks,setLoaded } from '../actions'
 import reducer from '../reducers'
 import { StackNavigator } from 'react-navigation';
@@ -52,6 +52,9 @@ class ShowDecks extends React.Component {
   }
 
   componentDidMount() {
+    //removeDecks()
+    //this._saveToAsyncStorage()
+
     const { width, height } = Dimensions.get('window');
     getDecks().then((decks) => this.props.setDecks(JSON.parse(decks)))
     //I want a spinner to show even though loading is fast

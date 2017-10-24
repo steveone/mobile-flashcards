@@ -22,6 +22,20 @@ export function getDecks(){
   })
 }
 
+
+export function removeDecks(){
+  return AsyncStorage.removeItem('@mobile-flashcards', (result) => {
+    return JSON.parse(result)
+  })
+}
+
+export function updateDecks(decks){
+  console.log("in updatedecks")
+  console.log(decks)
+  console.log("that was the update above")
+  return AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(decks))
+}
+
 export function submitEntry({ entry, key}){
 
   return AsyncStorage.mergeItem(CALENDAR_STORAGE_KEY, JSON.stringify({

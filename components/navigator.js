@@ -66,6 +66,9 @@ componentDidMount(){
   loaded = true
 }
 
+shouldComponentUpdate(prevProps, prevState){
+  return true
+}
 
 render(){
   return (
