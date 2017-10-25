@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Dimensions, ActivityIndicator, TextInput, TouchableNativeFeedback, AsyncStorage, Alert, ScrollView, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
+import { DeviceEventEmitter, Dimensions, ActivityIndicator, TextInput, TouchableNativeFeedback, AsyncStorage, Alert, ScrollView, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
 import { getDecks,removeDecks} from '../utils/api'
 import { setDecks,setLoaded } from '../actions'
 import reducer from '../reducers'
@@ -41,6 +41,21 @@ JavaScript: {
 class ShowDecks extends React.Component {
 
 
+refreshFunction(){
+
+  console.log("here")
+
+}
+
+refresh(){
+
+  console.log("there")
+
+}
+
+componentDidUpdate(){
+  console.log("did update showdeck")
+}
 
   constructor(props) {
     super(props);
@@ -48,10 +63,16 @@ class ShowDecks extends React.Component {
   }
 
   shouldComponentUpdate(prevProps, prevState){
+    console.log("should be updating showdecks now")
     return true
   }
 
+  componentWillUnmount(){
+    DeviceEventEmitter.removeAllListeners('xxx')
+  }
+
   componentDidMount() {
+    DeviceEventEmitter.addListener('xxx', this.refresh)
     //removeDecks()
     //this._saveToAsyncStorage()
 
@@ -95,6 +116,7 @@ outputLog = () => {
     }
 
 render(){
+
 console.log("in render")
 //console.log(this.props.decks)
 //console.log(decks)
@@ -126,8 +148,9 @@ return (
   <ScrollView style={styles.fullContainer} key={deck + 'sv'}>
   <TouchableHighlight key={deck + 'th'} onPress = {() =>  this.props.navigation.navigate('Deck',{
     deck:deck,
-    totalQuestions:decks[deck]['questions'].length
-  })}>
+    totalQuestions:decks[deck]['questions'].length, refresh: this.refreshFunction
+  }
+)}>
   <Text style={styles.button}>
   <Text>
     {deck}

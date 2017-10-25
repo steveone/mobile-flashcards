@@ -31,6 +31,7 @@ class Quiz extends React.Component {
       done: false,
       modalVisible: false,
       lastAnswer:null,
+    //deckName: navigation.state.params.deck
     };
     console.log(this.props)
   }
@@ -170,11 +171,7 @@ return (
         backgroundColor='black'
         size='large' />
   )}
-{questions
-  .filter((element, index) => index == this.state.currentQuestion)
-  .map((question, index)=>
 
-  <ScrollView style={styles.fullContainer} key={question.question + 'sv'}>
   <Modal animationType="fade"
           transparent={false}
           visible={this.state.modalVisible}
@@ -184,10 +181,14 @@ return (
           <Text style={styles.buttonLarge}>
           {(this.state.lastAnswer == 'Right') ? "Good Job" : "You'll get it next time"}
            {'\n'}
-           <Icon name="mood" style={{width:100,height:100}}/>
           </Text>
         </ScrollView>
     </Modal>
+
+{questions
+  .filter((element, index) => index == this.state.currentQuestion)
+  .map((question, index)=>
+  <ScrollView style={styles.fullContainer} key={question.question + 'sv'}>
   <FlipCard  key ={questions.question + 'fc'}
     friction={6}
     perspective={1000}

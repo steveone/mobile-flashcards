@@ -7,7 +7,6 @@ import { getDecksFromAPI } from './actions'
 import reducer from './reducers'
 import { createStore,applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk';
-//import DevToolsApp from 'remotedev-app';
 
 var STORAGE_KEY = '@mobile-flashcards';
 
@@ -16,7 +15,9 @@ var STORAGE_KEY = '@mobile-flashcards';
 
 const myStore = store(
   reducer,
-    applyMiddleware(thunk,logger)
+  applyMiddleware(thunk,logger),
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+
 );
 
 

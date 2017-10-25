@@ -40,8 +40,6 @@ JavaScript: {
 
 class Deck extends React.Component {
 
-
-
   constructor(props) {
     super(props);
     this.state = { text: 'Useless Placeholder' };
@@ -57,6 +55,7 @@ class Deck extends React.Component {
       decks = this.props.decks
       showingDeck = this.props.navigation.state.params.deck
       totalQuestions = this.props.navigation.state.params.totalQuestions
+      refresh = this.props.navigation.state.params.refresh
       }
     if ((decks !== null) && (showingDeck !== null)) {
       totalQuestions = decks[showingDeck]['questions'].length

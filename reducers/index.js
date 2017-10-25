@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import _ from 'lodash'
 
 import {
   ADD_DECKS,
@@ -38,12 +39,17 @@ function decks (state = {}, action) {
       }
     case SAVE_NEW_QUESTION:
     let deck = action.data.deck
+    console.log("deck is")
+    console.log(action.data)
     let newQuestion = {
       question: action.data.newQuestion,
       answer: action.data.newAnswer
     }
-    let retVal = Object.assign({},state)
-    Object.keys(retVal).map( (currentValue, index, arry) => {
+//    let retVal = Object.assign({},state.decks)
+  let retVal = null
+    _.assign(retVal,state.decks)
+    _.keys(retVal)
+    .map( (currentValue, index, arry) => {
       if (currentValue === deck) {
         let questionCount = retVal[currentValue].questions.length
         retVal[currentValue].push(newQuestion);
