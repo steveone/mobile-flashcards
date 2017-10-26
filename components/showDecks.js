@@ -72,7 +72,9 @@ createNewDeck() {
   }
   data = {newDeckName: this.state.newDeckName}
 
-  retVal = Object.assign({},this.state.decks)
+  let retVal = Object.assign({},this.props.decks)
+  console.log("retval is")
+  console.log(retVal)
   let newDeckName = this.state.newDeckName
   let newDeck = {
         questions:[],
@@ -80,10 +82,19 @@ createNewDeck() {
       }
 
   retVal[newDeckName] = newDeck
-  removeDecks().then(() => updateDecks(retVal))
+  console.log("about to send this to remove decks")
+  console.log(retVal)
+//  removeDecks().then(() =>
+  updateDecks(retVal)
 
   this.props.addNewDeck({data})
   this.setState({newDeckName:''})
+  if (this.state.loaded != true) {
+    setTimeout(this.props.setLoaded,
+      1000
+    )
+  }
+
 }
 
   constructor(props) {

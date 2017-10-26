@@ -217,6 +217,9 @@ return (
   <Text style={styles.button}>
      {question.question}
   </Text>
+  <Text style={styles.buttonSmall}>
+    Click to see answer
+  </Text>
   </View>
   <View style={styles.back}>
     <Text style={styles.button}>
@@ -329,6 +332,20 @@ const styles = StyleSheet.create({
       borderColor: 'blue',
       borderWidth:1
     },
+    buttonSmall: {
+       textAlignVertical:'center',
+       textAlign:'center',
+       fontSize:15,
+       padding: 5,
+       marginBottom: 3,
+       marginTop:3,
+       width: this.width/2,
+       height:50,
+       alignItems: 'center',
+       backgroundColor: '#2196F3',
+       borderColor: 'blue',
+       borderWidth:1
+     },
 })
 
 

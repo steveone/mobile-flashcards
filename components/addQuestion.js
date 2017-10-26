@@ -34,6 +34,13 @@ class AddQuestion extends React.Component {
     )
   }
 
+  componentDidUpdate(){
+    if (this.state.loaded != true) {
+      setTimeout(this.props.setLoaded,
+      1000
+      )
+    }
+  }
 
    _loadInitialState() {
 
