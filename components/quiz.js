@@ -42,6 +42,15 @@ class Quiz extends React.Component {
     return true
   }
 
+  componentDidUpdate(){
+  if (loaded != true) {
+      setTimeout(this.props.setLoaded,
+        1000
+      )
+    }
+    console.log("component did update in quiz")
+  }
+
   componentDidMount() {
     const { width, height } = Dimensions.get('window');
     if (this.props.decks) {
@@ -58,6 +67,12 @@ class Quiz extends React.Component {
     if (this.state.totalQuestions !== totalQuestions) {
       this.setState({totalQuestions})
     }
+    if (loaded == false) {
+      setTimeout(this.props.setLoaded,
+        1000
+      )
+    }
+
   }
 
 
@@ -215,6 +230,8 @@ return (
   </FlipCard>
   </ScrollView>
 )}
+
+{(totalQuestions == 0) && <Text>No Questions</Text>}
 
 {(this.state.done === true) &&
   <View style={styles.fullContainer} key={'quizDone'}>

@@ -5,6 +5,7 @@ import {
   ADD_DECKS,
   SET_LOADED,
   SAVE_NEW_QUESTION,
+  ADD_NEW_DECK,
 //  SET_DECKS,
 } from './types';
 
@@ -25,6 +26,15 @@ export function setLoaded(){
 export function saveNewQuestion(data){
   return {
     type:SAVE_NEW_QUESTION,
+    data
+  }
+}
+
+export function addNewDeck(data){
+  console.log("in addnewdeck action")
+  console.log(data)
+  return{
+    type:ADD_NEW_DECK,
     data
   }
 }

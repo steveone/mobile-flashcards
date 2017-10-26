@@ -5,7 +5,8 @@ import {
   ADD_DECKS,
   SET_DECKS,
   SET_LOADED,
-  SAVE_NEW_QUESTION
+  SAVE_NEW_QUESTION,
+  ADD_NEW_DECK,
 } from '../actions/types'
 
 const initialQuestions = null;
@@ -28,7 +29,24 @@ function loaded (state = {}, action){
 function decks (state = {}, action) {
 //console.log("in reducer")
 //console.log(action.data)
+console.log("in reducer with some action to work on")
   switch (action.type) {
+//    let retVal = {}
+    case ADD_NEW_DECK:
+    //_.assign(retVal,state)
+      retVal = Object.assign({},state)
+      let newDeckName = data.newDeckName
+      let newDeck = {
+            questions:[],
+            title: newDeckName
+          }
+
+      retVal[newDeckName] = newDeck
+      console.log("Adding new deck named: " + newDeckName)
+    return {
+      ...state,...retVal
+    }
+
     case SET_DECKS:
       return {
         ...state, ...action
@@ -46,7 +64,7 @@ function decks (state = {}, action) {
       answer: action.data.newAnswer
     }
 //    let retVal = Object.assign({},state.decks)
-  let retVal = null
+    let retVal = {}
     _.assign(retVal,state.decks)
     _.keys(retVal)
     .map( (currentValue, index, arry) => {

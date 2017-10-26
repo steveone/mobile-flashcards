@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { DeviceEventEmitter, Dimensions, ActivityIndicator, TextInput, TouchableNativeFeedback, AsyncStorage, Alert, ScrollView, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
-import { getDecks,removeDecks} from '../utils/api'
-import { setDecks,setLoaded } from '../actions'
+import { removeDecks,updateDecks,getDecks} from '../utils/api'
+import { addNewDeck,setDecks,setLoaded } from '../actions'
 import reducer from '../reducers'
 import { StackNavigator } from 'react-navigation';
 import { NavigationActions } from 'react-navigation'
@@ -55,11 +55,40 @@ refresh(){
 
 componentDidUpdate(){
   console.log("did update showdeck")
+  if (loaded != true) {
+    setTimeout(this.props.setLoaded,
+      1000
+    )
+  }
+  console.log("component did update showdeck")
+}
+
+createNewDeck() {
+  console.log("Creating a new deck called " + this.state.newDeckName)
+  //clearning newDeckName field
+  if (this.state.newDeckName.length < 1) {
+    Alert.alert("Please enter a name for your new Deck")
+    return
+  }
+  data = {newDeckName: this.state.newDeckName}
+
+  retVal = Object.assign({},this.state.decks)
+  let newDeckName = this.state.newDeckName
+  let newDeck = {
+        questions:[],
+        title: newDeckName
+      }
+
+  retVal[newDeckName] = newDeck
+  removeDecks().then(() => updateDecks(retVal))
+
+  this.props.addNewDeck({data})
+  this.setState({newDeckName:''})
 }
 
   constructor(props) {
     super(props);
-    this.state = { text: 'Useless Placeholder' };
+    this.state = { newDeckName: '' };
   }
 
   shouldComponentUpdate(prevProps, prevState){
@@ -68,11 +97,10 @@ componentDidUpdate(){
   }
 
   componentWillUnmount(){
-    DeviceEventEmitter.removeAllListeners('xxx')
   }
 
   componentDidMount() {
-    DeviceEventEmitter.addListener('xxx', this.refresh)
+
     //removeDecks()
     //this._saveToAsyncStorage()
 
@@ -167,15 +195,15 @@ return (
 
   </ScrollView>
 )}
-<View style={{top:50, height:200, width:this.width, padding:10}}>
-  <Text>Create a new deck by entering a title below:</Text>
+<View style={{top:10, height:200, width:this.width, padding:5}}>
+  <Text style={{textAlign:'center'}}>Create a new deck by entering a title below:</Text>
   <TextInput
     style={{height: 40, width: this.width, borderColor: 'grey',  borderWidth: 1}}
-    onChangeText={(text) => this.setState({text})}
-      value={this.state.text}
+    onChangeText={(newDeckName) => this.setState({newDeckName})}
+      value={this.state.newDeckName}
     >
     </TextInput>
-
+    <Button title="Add New Deck" onPress = {() => {this.createNewDeck(this.state.newDeckName)}}/>
 </View>
 </ScrollView>
 </View>
@@ -240,7 +268,8 @@ const mapStateToProps = ((state) => (
 function mapDispatchToProps(dispatch) {
   return{
     setDecks: (data) => dispatch(setDecks(data)),
-    setLoaded: () => dispatch(setLoaded())
+    setLoaded: () => dispatch(setLoaded()),
+    addNewDeck: (data) => dispatch(addNewDeck(data)),
   }
 }
 

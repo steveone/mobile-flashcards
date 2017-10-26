@@ -36,14 +36,14 @@ const Stack = StackNavigator({
   Home: {
     screen: ShowDecks,
     navigationOptions: ({navigation}) => ({
-      title: `Show All Decks`,
+      title: `Showing All Decks`,
     }),
   },
   Deck: {
     screen: Deck,
     navigationOptions: ({navigation}) => ({
       title: `Showing Deck: ${navigation.state.params.deck}`,
-      headerLeft: ( <Icon name={'close'} onPress={ () => { DeviceEventEmitter.emit('xxx'),navigation.goBack() } }  /> )
+      headerLeft: ( <Icon name={'close'} onPress={ () => { navigation.goBack() } }  /> )
       //navigation.state.params.refresh();
     }),
   },
@@ -51,6 +51,8 @@ const Stack = StackNavigator({
     screen: Quiz,
     navigationOptions: ({navigation}) => ({
       title: `Quiz on: ${navigation.state.params.deck}`,
+      headerLeft: ( <Icon name={'close'} onPress={ () => { navigation.goBack() } }  /> )
+
     }),
   },
   AddQuestion: {
