@@ -7,6 +7,8 @@ import { getDecksFromAPI } from './actions'
 import reducer from './reducers'
 import { createStore,applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk';
+import { Notifications, Permissions } from 'expo'
+import {setLocalNotification} from './utils/notifications'
 
 var STORAGE_KEY = '@mobile-flashcards';
 
@@ -31,6 +33,7 @@ export default class App extends Component {
       //this.props.getDecks(STORAGE_KEY);
     //  console.log(this.props)
     const { width, height } = Dimensions.get('window');
+    setLocalNotification();
     }
 
 
