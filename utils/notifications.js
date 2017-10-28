@@ -8,7 +8,7 @@ export function clearLocalNotifications(){
   .then(Notifications.cancelAllScheduledNotificationsAsync())
 }
 
-  function createNotification(){
+function createNotification(){
     return {
       title:"Don't forget to practice!",
       body:"Don't forget to practice with a quiz today",
@@ -19,7 +19,7 @@ export function clearLocalNotifications(){
         sound:true,
         priority:'high',
         sticky: false,
-        vibrate, True,
+        vibrate: true,
       }
     }
   }
@@ -35,21 +35,20 @@ export function setLocalNotification(){
         if (status === 'granted') {
         Notifications.cancelAllScheduledNotificationsAsync()
 
-        let tomorrow = new Date()
-        tomorrow.setDate(tommorow.getDate() + 1)
-        tomorrow.setHour(20)
-        tomorrow.setMinutes(0)
-
-        Notificatinos.scheduleLocalNotificationAsync(
+let tomorrow = new Date()
+tomorrow.setDate(tomorrow.getDate() + 1)
+tomorrow.setHours(20)
+tomorrow.setMinutes(00)
+        Notifications.scheduleLocalNotificationAsync(
           createNotification(),
           {
-            time:tomorrow,
-            repeate: 'day',
+            time: tomorrow,
+            repeat: 'day',
           }
         )
-        AsyncStorage.setItem(NOTIFICATION_KEY,JSON.Stringify(true))
+        AsyncStorage.setItem(NOTIFICATION_KEY,JSON.stringify(true))
       }
     }
   )}
+  })
 }
-)}
