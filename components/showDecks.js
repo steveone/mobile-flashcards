@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { DeviceEventEmitter, Dimensions, ActivityIndicator, TextInput, TouchableNativeFeedback, AsyncStorage, Alert, ScrollView, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
 import { removeDecks,updateDecks,getDecks} from '../utils/api'
 import { addNewDeck,setDecks,setLoaded } from '../actions'
+import { Card,FormLabel, FormInput } from 'react-native-elements'
 import reducer from '../reducers'
 import { StackNavigator } from 'react-navigation';
 import { NavigationActions } from 'react-navigation'
@@ -43,24 +44,18 @@ class ShowDecks extends React.Component {
 
 refreshFunction(){
 
-  console.log("here")
-
 }
 
 refresh(){
 
-  console.log("there")
-
 }
 
 componentDidUpdate(){
-  console.log("did update showdeck")
   if (loaded != true) {
     setTimeout(this.props.setLoaded,
       1000
     )
   }
-  console.log("component did update showdeck")
 }
 
 createNewDeck() {
@@ -73,8 +68,6 @@ createNewDeck() {
   data = {newDeckName: this.state.newDeckName}
 
   let retVal = Object.assign({},this.props.decks)
-  console.log("retval is")
-  console.log(retVal)
   let newDeckName = this.state.newDeckName
   let newDeck = {
         questions:[],
@@ -82,9 +75,6 @@ createNewDeck() {
       }
 
   retVal[newDeckName] = newDeck
-  console.log("about to send this to remove decks")
-  console.log(retVal)
-//  removeDecks().then(() =>
   updateDecks(retVal)
 
   this.props.addNewDeck({data})
@@ -103,7 +93,6 @@ createNewDeck() {
   }
 
   shouldComponentUpdate(prevProps, prevState){
-    console.log("should be updating showdecks now")
     return true
   }
 
@@ -156,7 +145,6 @@ outputLog = () => {
 
 render(){
 
-console.log("in render")
 //console.log(this.props.decks)
 //console.log(decks)
 //console.log(this.props.loaded)
@@ -168,8 +156,6 @@ if (this.props.decks) {
   else {
     decks = null
   }
-console.log("in sow decks")
-console.log(decks)
 return (
 
   <View  key='11' style={{flex: 1, height:this.height-500, width:this.width-300}}>
@@ -185,6 +171,7 @@ return (
   <ScrollView style={styles.fullContainer}>
 {decks && Object.keys(decks).map((deck)=>
   <ScrollView style={styles.fullContainer} key={deck + 'sv'}>
+<Card title={deck}>
   <TouchableHighlight key={deck + 'th'} onPress = {() =>  this.props.navigation.navigate('Deck',{
     deck:deck,
     totalQuestions:decks[deck]['questions'].length, refresh: this.refreshFunction
@@ -192,14 +179,14 @@ return (
 )}>
   <Text style={styles.button}>
   <Text>
-    {deck}
+    Go to quiz deck
   </Text>
   <Text style={styles.buttonText}>
     {"\n" + JSON.stringify(decks[deck]['questions'].length)} questions
   </Text>
   </Text>
   </TouchableHighlight>
-
+</Card>
 <Text>
   </Text>
 
@@ -207,14 +194,17 @@ return (
   </ScrollView>
 )}
 <View style={{top:10, height:200, width:this.width, padding:5}}>
-  <Text style={{textAlign:'center'}}>Create a new deck by entering a title below:</Text>
-  <TextInput
-    style={{height: 40, width: this.width, borderColor: 'grey',  borderWidth: 1}}
+  <FormLabel >Create a new deck by entering a title below:</FormLabel>
+  <FormInput
+    style={{height: 40, width: this.width, borderColor: 'black' }}
     onChangeText={(newDeckName) => this.setState({newDeckName})}
       value={this.state.newDeckName}
     >
-    </TextInput>
-    <Button title="Add New Deck" onPress = {() => {this.createNewDeck(this.state.newDeckName)}}/>
+    </FormInput>
+    {
+      (this.state.newDeckName.length > 0)
+      && <Button title="Add New Deck" onPress = {() => {this.createNewDeck(this.state.newDeckName)}}/>
+    }
 </View>
 </ScrollView>
 </View>

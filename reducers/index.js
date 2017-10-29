@@ -29,7 +29,6 @@ function loaded (state = {}, action){
 function decks (state = {}, action) {
 //console.log("in reducer")
 //console.log(action.data)
-console.log("in reducer with some action to work on")
   switch (action.type) {
 //    let retVal = {}
     case ADD_NEW_DECK:
@@ -42,7 +41,6 @@ console.log("in reducer with some action to work on")
           }
 
       retVal[newDeckName] = newDeck
-      console.log("Adding new deck named: " + newDeckName)
     return {
       ...state,...retVal
     }
@@ -57,8 +55,6 @@ console.log("in reducer with some action to work on")
       }
     case SAVE_NEW_QUESTION:
     let deck = action.data.deck
-    console.log("deck is")
-    console.log(action.data)
     let newQuestion = {
       question: action.data.newQuestion,
       answer: action.data.newAnswer
@@ -76,7 +72,6 @@ console.log("in reducer with some action to work on")
         }
       else { return retVal[currentValue]}
       });
-    console.log(retVal)
     return {...state,...retVal}
     default:
     return state

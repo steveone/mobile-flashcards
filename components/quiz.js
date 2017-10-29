@@ -8,7 +8,7 @@ import { StackNavigator } from 'react-navigation';
 import { NavigationActions } from 'react-navigation'
 import FlipCard from 'react-native-flip-card'
 //import Icon from 'react-native-vector-icons/MaterialIcons';
-import { Icon } from 'react-native-elements'
+import { Rating, Card , Icon } from 'react-native-elements'
 
 var STORAGE_KEY = '@mobile-flashcards';
 
@@ -173,7 +173,7 @@ if (this.props.decks) {
   showingDeck = this.props.navigation.state.params.deck
   totalQuestions = this.props.navigation.state.params.totalQuestions
   }
-
+let questionsLeft = totalQuestions-this.state.wrong-this.state.right
 questions = (decks !== null) ? decks[showingDeck]['questions'] : null
 
 console.log(totalQuestions)
@@ -193,10 +193,12 @@ return (
           onRequestClose={() => console.log("closing modal")}
           >
         <ScrollView style={styles.fullContainer}>
+          <Card>
           <Text style={styles.buttonLarge}>
           {(this.state.lastAnswer == 'Right') ? "Good Job" : "You'll get it next time"}
            {'\n'}
           </Text>
+          </Card>
         </ScrollView>
     </Modal>
 
@@ -204,6 +206,7 @@ return (
   .filter((element, index) => index == this.state.currentQuestion)
   .map((question, index)=>
   <ScrollView style={styles.fullContainer} key={question.question + 'sv'}>
+  <Card>
   <FlipCard  key ={questions.question + 'fc'}
     friction={6}
     perspective={1000}
@@ -216,21 +219,27 @@ return (
 <View style={styles.face}>
   <Text style={styles.button}>
      {question.question}
+     {'\n'}
+     <Text style={styles.buttonSmall}>
+     There are {questionsLeft} questions to left in the quiz.
+     </Text>
   </Text>
   <Text style={styles.buttonSmall}>
     Click to see answer
   </Text>
+
   </View>
   <View style={styles.back}>
     <Text style={styles.button}>
       {question.answer}
     </Text>
-    <Button title="I got it Right :)" onPress = {() =>  this.nextQuestion("Right")}>
+    <Button style={styles.answer} title="I got it Right :)" onPress = {() =>  this.nextQuestion("Right")}>
     </Button>
-    <Button title="I got it Wrong :(" onPress = {() =>  this.nextQuestion("Wrong")}>
+    <Button style={styles.answer} title="I got it Wrong :(" onPress = {() =>  this.nextQuestion("Wrong")}>
     </Button>
     </View>
   </FlipCard>
+  </Card>
   </ScrollView>
 )}
 
@@ -238,13 +247,24 @@ return (
 
 {(this.state.done === true) &&
   <View style={styles.fullContainer} key={'quizDone'}>
+  <Card>
   <Text style={styles.completed}>You have completed the quiz. {'\n'}
    You got {this.state.right} Correct and {this.state.wrong} incorrect.
   </Text>
+  <Rating
+  type="heart"
+  ratingCount={totalQuestions}
+  startingValue={this.state.right}
+  imageSize={40}
+  onFinishRating={this.ratingCompleted}
+  showRating
+  style={{ paddingVertical: 10, alignItems:'center' }}
+/>
   <Button title="Restart" onPress = {() => this.restartQuiz()}>
   </Button>
   <Button title="Back to Deck list" onPress = {() => goBack()}>
   </Button>
+  </Card>
   </View>
 
 }

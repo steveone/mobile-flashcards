@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux'
 import { Dimensions, ActivityIndicator, TextInput, TouchableNativeFeedback, AsyncStorage, Alert, ScrollView, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
 import { removeDecks,updateDecks,getDecks} from '../utils/api'
+import { FormLabel, FormInput } from 'react-native-elements'
 import { setDecks,setLoaded,saveNewQuestion } from '../actions'
 import reducer from '../reducers'
 import { StackNavigator } from 'react-navigation';
@@ -16,8 +17,8 @@ class AddQuestion extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      newAnswer: null,
-      newQuestion:null
+      newAnswer: '',
+      newQuestion:''
     };
   }
 
@@ -119,15 +120,12 @@ saveQuestionToDeck = () => {
   console.log(error.message)
  }
 
-  this.setState({newQuestion:null,newAnswer:null})
+  this.setState({newQuestion:'',newAnswer:''})
 }
 
 
 render(){
-console.log("in render")
-//console.log(this.props.decks)
-//console.log(decks)
-//console.log(this.props.loaded)
+
 const showLoading = (this.props.loaded === null) ? true : false
 let decks = null
 if (this.props.decks) {
@@ -136,8 +134,6 @@ if (this.props.decks) {
   else {
     decks = null
   }
-console.log("next decks")
-console.log(decks)
 return (
 
   <View  key='11' style={{flex: 1, height:this.height-500, width:this.width-300}}>
@@ -166,28 +162,24 @@ return (
   </Text>
 
   <View style={{top:50, height:300, width:this.width, padding:10}}>
-    <Text>Enter New Question below:</Text>
-    <TextInput
-      style={{height: 40, width: this.width, borderColor: 'grey',  borderWidth: 1}}
+    <FormLabel>Enter New Question below:</FormLabel>
+    <FormInput
+      style={{height: 40, width: this.width}}
       onChangeText={(newQuestion) => this.setState({newQuestion})}
         value={this.state.newQuestion}
       >
-      </TextInput>
-      <Text>Enter Answer below:</Text>
-      <TextInput
-        style={{height: 40, width: this.width, borderColor: 'grey',  borderWidth: 1}}
+      </FormInput>
+      <FormLabel>Enter Answer below:</FormLabel>
+      <FormInput
+        style={{height: 40, width: this.width}}
         onChangeText={(newAnswer) => this.setState({newAnswer})}
           value={this.state.newAnswer}
         >
-        </TextInput>
-        <TouchableHighlight key={deck + 'aq'} onPress = {() =>  this.saveQuestionToDeck()}>
-        <Text style={styles.buttonSmall}>
-        <Text style={styles.buttonText}>
-          Save Question/Answer to {deck}
-        </Text>
-
-        </Text>
-        </TouchableHighlight>
+        </FormInput>
+        {(this.state.newAnswer.length > 0) && (this.state.newQuestion.length > 0) &&
+        <Button title= {`Save Question/Answer to ${deck}`} key={deck + 'aq'} onPress = {() =>  this.saveQuestionToDeck()}>
+        </Button>
+      }
 </View>
   </ScrollView>
 )}

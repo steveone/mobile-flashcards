@@ -6,6 +6,7 @@ import { setDecks,setLoaded } from '../actions'
 import reducer from '../reducers'
 import { StackNavigator } from 'react-navigation';
 import { NavigationActions } from 'react-navigation'
+import { Card } from 'react-native-elements'
 
 var STORAGE_KEY = '@mobile-flashcards';
 
@@ -100,8 +101,6 @@ outputLog = () => {
     }
 
 render(){
-console.log("in render")
-console.log(this.props.decks)
 let t = JSON.stringify(this.props.decks)
 console.log(t)
 //console.log(this.props.loaded)
@@ -113,8 +112,6 @@ if (this.props.decks) {
   else {
     decks = null
   }
-console.log("next decks")
-console.log(decks)
 return (
 
   <View  key='11' style={{flex: 1, height:this.height-500, width:this.width-300}}>
@@ -132,6 +129,7 @@ return (
   .filter((deck, index) => deck == this.props.navigation.state.params.deck)
   .map((deck)=>
   <ScrollView style={styles.fullContainer} key={deck + 'sv'}>
+  <Card>
   <TouchableHighlight key={deck + 'th'} onPress = {() =>  this.props.navigation.navigate('Quiz',{
     deck:deck,
     totalQuestions:decks[deck]['questions'].length
@@ -161,7 +159,7 @@ return (
   </Text>
   </TouchableHighlight>
 
-
+</Card>
   </ScrollView>
 )}
 
