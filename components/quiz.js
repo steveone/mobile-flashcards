@@ -7,6 +7,7 @@ import reducer from '../reducers'
 import { StackNavigator } from 'react-navigation';
 import { NavigationActions } from 'react-navigation'
 import FlipCard from 'react-native-flip-card'
+
 //import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Rating, Card , Icon } from 'react-native-elements'
 
@@ -243,7 +244,7 @@ return (
   </ScrollView>
 )}
 
-{(totalQuestions == 0) && <Text>No Questions</Text>}
+{(totalQuestions == 0) && <Card><Text>There are no questions in this quiz. Please go back and add some questions</Text></Card>}
 
 {(this.state.done === true) &&
   <View style={styles.fullContainer} key={'quizDone'}>

@@ -8,8 +8,9 @@ import reducer from './reducers'
 import { createStore,applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk';
 import { Notifications, Permissions } from 'expo'
-import {setLocalNotification} from './utils/notifications'
-
+import {setLocalNotification, getCurrentNotification} from './utils/notifications'
+import Reactotron from 'reactotron-react-native'
+import './ReactotronConfig'
 var STORAGE_KEY = '@mobile-flashcards';
 
 
@@ -33,7 +34,11 @@ export default class App extends Component {
       //this.props.getDecks(STORAGE_KEY);
     //  console.log(this.props)
     const { width, height } = Dimensions.get('window');
-    setLocalNotification();
+    console.log("setting current")
+    setLocalNotification()
+    console.log("gettingg currnet not")
+    getCurrentNotification()
+
     }
 
 
