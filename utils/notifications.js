@@ -31,28 +31,39 @@ function createNotification(){
     }
   }
 
+  //used to update notifications after quiz is completed
+  export function setLocalNotificationForTomorrow(){
+      let tomorrow = new Date()
+      tomorrow.setDate(tomorrow.getDate()+1)
+      tomorrow.setHours(20)
+      tomorrow.setMinutes(0)
+      Permissions.askAsync(Permissions.NOTIFICATIONS)
+        .then(({status}) => {
+          if (status === 'granted') {
+          Notifications.cancelAllScheduledNotificationsAsync()
+          Notifications.scheduleLocalNotificationAsync(
+            createNotification(),
+            {
+              time: tomorrow,
+              repeat: 'day',
+            }
+          )
+          return AsyncStorage.setItem(NOTIFICATION_KEY,JSON.stringify(tomorrow))
+        }
+      })
+  }
 
 export function setLocalNotification(){
   console.log("in set local notification")
   AsyncStorage.getItem(NOTIFICATION_KEY)
   .then(JSON.parse)
   .then((data) => {
-    console.log("Currently set next alert")
-    console.log(data)
-    //figure out tomorrows date at 8 pm
+   //figure out tomorrows date at 8 pm
     let tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate()+1)
     tomorrow.setHours(20)
     tomorrow.setMinutes(0)
-    let currentSetDate = new Date(data)
-    let daysApart =  tomorrow.getDate()-currentSetDate.getDate()
-    console.log("days between tomorrow and next alert")
-    console.log(daysApart)
-    console.log(tomorrow.getHours())
-    let currentDateTime = new Date()
-    let currentHours = currentDateTime.getHours()
-    //determine if last notification time was past or not set
-    //and set notififcation for tommorow
+    //if no notification was set, setup notifications
     if (data === null){
       console.log("got null")
       Permissions.askAsync(Permissions.NOTIFICATIONS)

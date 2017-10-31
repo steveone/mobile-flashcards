@@ -7,6 +7,7 @@ import reducer from '../reducers'
 import { StackNavigator } from 'react-navigation';
 import { NavigationActions } from 'react-navigation'
 import FlipCard from 'react-native-flip-card'
+import { setLocalNotificationForTomorrow } from '../utils/notifications'
 
 //import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Rating, Card , Icon } from 'react-native-elements'
@@ -132,13 +133,16 @@ closeModal = () => {
   console.log(this.state.totalQuestions)
   if (totalAnswered === this.state.totalQuestions) {
     this.setState({done:true})
-    console.log("setting done to true")
+    //clear notifications and set one for tomorrow
   }
 }
 
 moveToNextQuestion = () => {
-
   setTimeout(()=>{this.closeModal()} , 2000)
+  let totalAnswered = (this.state.right + this.state.wrong)
+  if (totalAnswered === this.state.totalQuestions) {
+    setLocalNotificationForTomorrow()
+  }
 }
 
 nextQuestion = (answer) => {
