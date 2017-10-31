@@ -6,6 +6,7 @@ import { setDecks,setLoaded } from '../actions'
 import reducer from '../reducers'
 import { StackNavigator } from 'react-navigation';
 import { NavigationActions } from 'react-navigation'
+import { Card } from 'react-native-elements'
 
 var STORAGE_KEY = '@mobile-flashcards';
 
@@ -40,8 +41,6 @@ JavaScript: {
 
 class Deck extends React.Component {
 
-
-
   constructor(props) {
     super(props);
     this.state = { text: 'Useless Placeholder' };
@@ -57,6 +56,7 @@ class Deck extends React.Component {
       decks = this.props.decks
       showingDeck = this.props.navigation.state.params.deck
       totalQuestions = this.props.navigation.state.params.totalQuestions
+      refresh = this.props.navigation.state.params.refresh
       }
     if ((decks !== null) && (showingDeck !== null)) {
       totalQuestions = decks[showingDeck]['questions'].length
@@ -101,8 +101,6 @@ outputLog = () => {
     }
 
 render(){
-console.log("in render")
-console.log(this.props.decks)
 let t = JSON.stringify(this.props.decks)
 console.log(t)
 //console.log(this.props.loaded)
@@ -114,8 +112,6 @@ if (this.props.decks) {
   else {
     decks = null
   }
-console.log("next decks")
-console.log(decks)
 return (
 
   <View  key='11' style={{flex: 1, height:this.height-500, width:this.width-300}}>
@@ -133,6 +129,7 @@ return (
   .filter((deck, index) => deck == this.props.navigation.state.params.deck)
   .map((deck)=>
   <ScrollView style={styles.fullContainer} key={deck + 'sv'}>
+  <Card>
   <TouchableHighlight key={deck + 'th'} onPress = {() =>  this.props.navigation.navigate('Quiz',{
     deck:deck,
     totalQuestions:decks[deck]['questions'].length
@@ -162,7 +159,7 @@ return (
   </Text>
   </TouchableHighlight>
 
-
+</Card>
   </ScrollView>
 )}
 
@@ -231,7 +228,7 @@ const styles = StyleSheet.create({
      color: 'white'
    },
    buttonTextBlack: {
-        fontSize: 30,
+        fontSize: 15,
         padding: 20,
         width: 100,
         height:100,

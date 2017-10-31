@@ -7,8 +7,10 @@ import { getDecksFromAPI } from './actions'
 import reducer from './reducers'
 import { createStore,applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk';
-//import DevToolsApp from 'remotedev-app';
-
+import { Notifications, Permissions } from 'expo'
+import {setLocalNotification, getCurrentNotification} from './utils/notifications'
+import Reactotron from 'reactotron-react-native'
+import './ReactotronConfig'
 var STORAGE_KEY = '@mobile-flashcards';
 
 
@@ -16,7 +18,9 @@ var STORAGE_KEY = '@mobile-flashcards';
 
 const myStore = store(
   reducer,
-    applyMiddleware(thunk,logger)
+  applyMiddleware(thunk,logger),
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+
 );
 
 
@@ -30,6 +34,11 @@ export default class App extends Component {
       //this.props.getDecks(STORAGE_KEY);
     //  console.log(this.props)
     const { width, height } = Dimensions.get('window');
+    console.log("setting current")
+    setLocalNotification()
+    console.log("gettingg currnet not")
+    getCurrentNotification()
+
     }
 
 

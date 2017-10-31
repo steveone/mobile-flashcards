@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { TouchableOpacity, Dimensions, ActivityIndicator, TextInput, TouchableNativeFeedback, AsyncStorage, Alert, ScrollView, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
+import { DeviceEventEmitter,TouchableOpacity, Dimensions, ActivityIndicator, TextInput, TouchableNativeFeedback, AsyncStorage, Alert, ScrollView, View,Text,StyleSheet, Button,TouchableHighlight } from 'react-native';
 import { getDecks} from '../utils/api'
 import { setDecks,setLoaded } from '../actions'
 import reducer from '../reducers'
@@ -9,6 +9,8 @@ import ShowDecks  from '../components/showDecks'
 import Deck  from '../components/deck'
 import Quiz from '../components/quiz'
 import AddQuestion from '../components/addQuestion'
+import { Icon } from 'react-native-elements'
+
 var STORAGE_KEY = '@mobile-flashcards';
 
 
@@ -34,19 +36,23 @@ const Stack = StackNavigator({
   Home: {
     screen: ShowDecks,
     navigationOptions: ({navigation}) => ({
-      title: `Show All Decks`,
+      title: `Showing All Decks`,
     }),
   },
   Deck: {
     screen: Deck,
     navigationOptions: ({navigation}) => ({
       title: `Showing Deck: ${navigation.state.params.deck}`,
+      headerLeft: ( <Icon name={'close'} onPress={ () => { navigation.goBack() } }  /> )
+      //navigation.state.params.refresh();
     }),
   },
   Quiz: {
     screen: Quiz,
     navigationOptions: ({navigation}) => ({
       title: `Quiz on: ${navigation.state.params.deck}`,
+      headerLeft: ( <Icon name={'close'} onPress={ () => { navigation.goBack() } }  /> )
+
     }),
   },
   AddQuestion: {

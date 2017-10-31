@@ -7,8 +7,10 @@ import reducer from '../reducers'
 import { StackNavigator } from 'react-navigation';
 import { NavigationActions } from 'react-navigation'
 import FlipCard from 'react-native-flip-card'
+import { setLocalNotificationForTomorrow } from '../utils/notifications'
+
 //import Icon from 'react-native-vector-icons/MaterialIcons';
-import { Icon } from 'react-native-elements'
+import { Rating, Card , Icon } from 'react-native-elements'
 
 var STORAGE_KEY = '@mobile-flashcards';
 
@@ -31,6 +33,7 @@ class Quiz extends React.Component {
       done: false,
       modalVisible: false,
       lastAnswer:null,
+    //deckName: navigation.state.params.deck
     };
     console.log(this.props)
   }
@@ -39,6 +42,15 @@ class Quiz extends React.Component {
 
   shouldComponentUpdate(prevProps, prevState){
     return true
+  }
+
+  componentDidUpdate(){
+  if (loaded != true) {
+      setTimeout(this.props.setLoaded,
+        1000
+      )
+    }
+    console.log("component did update in quiz")
   }
 
   componentDidMount() {
@@ -57,6 +69,12 @@ class Quiz extends React.Component {
     if (this.state.totalQuestions !== totalQuestions) {
       this.setState({totalQuestions})
     }
+    if (loaded == false) {
+      setTimeout(this.props.setLoaded,
+        1000
+      )
+    }
+
   }
 
 
@@ -115,13 +133,16 @@ closeModal = () => {
   console.log(this.state.totalQuestions)
   if (totalAnswered === this.state.totalQuestions) {
     this.setState({done:true})
-    console.log("setting done to true")
+    //clear notifications and set one for tomorrow
   }
 }
 
 moveToNextQuestion = () => {
-
   setTimeout(()=>{this.closeModal()} , 2000)
+  let totalAnswered = (this.state.right + this.state.wrong)
+  if (totalAnswered === this.state.totalQuestions) {
+    setLocalNotificationForTomorrow()
+  }
 }
 
 nextQuestion = (answer) => {
@@ -157,7 +178,7 @@ if (this.props.decks) {
   showingDeck = this.props.navigation.state.params.deck
   totalQuestions = this.props.navigation.state.params.totalQuestions
   }
-
+let questionsLeft = totalQuestions-this.state.wrong-this.state.right
 questions = (decks !== null) ? decks[showingDeck]['questions'] : null
 
 console.log(totalQuestions)
@@ -170,24 +191,27 @@ return (
         backgroundColor='black'
         size='large' />
   )}
-{questions
-  .filter((element, index) => index == this.state.currentQuestion)
-  .map((question, index)=>
 
-  <ScrollView style={styles.fullContainer} key={question.question + 'sv'}>
   <Modal animationType="fade"
           transparent={false}
           visible={this.state.modalVisible}
           onRequestClose={() => console.log("closing modal")}
           >
         <ScrollView style={styles.fullContainer}>
+          <Card>
           <Text style={styles.buttonLarge}>
           {(this.state.lastAnswer == 'Right') ? "Good Job" : "You'll get it next time"}
            {'\n'}
-           <Icon name="mood" style={{width:100,height:100}}/>
           </Text>
+          </Card>
         </ScrollView>
     </Modal>
+
+{questions
+  .filter((element, index) => index == this.state.currentQuestion)
+  .map((question, index)=>
+  <ScrollView style={styles.fullContainer} key={question.question + 'sv'}>
+  <Card>
   <FlipCard  key ={questions.question + 'fc'}
     friction={6}
     perspective={1000}
@@ -200,30 +224,52 @@ return (
 <View style={styles.face}>
   <Text style={styles.button}>
      {question.question}
+     {'\n'}
+     <Text style={styles.buttonSmall}>
+     There are {questionsLeft} questions to left in the quiz.
+     </Text>
   </Text>
+  <Text style={styles.buttonSmall}>
+    Click to see answer
+  </Text>
+
   </View>
   <View style={styles.back}>
     <Text style={styles.button}>
       {question.answer}
     </Text>
-    <Button title="I got it Right :)" onPress = {() =>  this.nextQuestion("Right")}>
+    <Button style={styles.answer} title="I got it Right :)" onPress = {() =>  this.nextQuestion("Right")}>
     </Button>
-    <Button title="I got it Wrong :(" onPress = {() =>  this.nextQuestion("Wrong")}>
+    <Button style={styles.answer} title="I got it Wrong :(" onPress = {() =>  this.nextQuestion("Wrong")}>
     </Button>
     </View>
   </FlipCard>
+  </Card>
   </ScrollView>
 )}
 
+{(totalQuestions == 0) && <Card><Text>There are no questions in this quiz. Please go back and add some questions</Text></Card>}
+
 {(this.state.done === true) &&
   <View style={styles.fullContainer} key={'quizDone'}>
+  <Card>
   <Text style={styles.completed}>You have completed the quiz. {'\n'}
    You got {this.state.right} Correct and {this.state.wrong} incorrect.
   </Text>
+  <Rating
+  type="heart"
+  ratingCount={totalQuestions}
+  startingValue={this.state.right}
+  imageSize={40}
+  onFinishRating={this.ratingCompleted}
+  showRating
+  style={{ paddingVertical: 10, alignItems:'center' }}
+/>
   <Button title="Restart" onPress = {() => this.restartQuiz()}>
   </Button>
   <Button title="Back to Deck list" onPress = {() => goBack()}>
   </Button>
+  </Card>
   </View>
 
 }
@@ -311,6 +357,20 @@ const styles = StyleSheet.create({
       borderColor: 'blue',
       borderWidth:1
     },
+    buttonSmall: {
+       textAlignVertical:'center',
+       textAlign:'center',
+       fontSize:15,
+       padding: 5,
+       marginBottom: 3,
+       marginTop:3,
+       width: this.width/2,
+       height:50,
+       alignItems: 'center',
+       backgroundColor: '#2196F3',
+       borderColor: 'blue',
+       borderWidth:1
+     },
 })
 
 

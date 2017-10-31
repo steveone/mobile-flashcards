@@ -3,19 +3,6 @@ import { AsyncStorage } from 'react-native'
 var STORAGE_KEY = '@mobile-flashcards';
 
 
-/*export function getDecksFromAPI(){
-  AsyncStorage.getItem(STORAGE_KEY, (err,result) =>{
-    if (result !== null){
-      let data = JSON.parse(result);
-      return data;
-    }
-    else {
-      console.log("no data found")
-    }
-  })
-}*/
-
-
 export function getDecks(){
   return AsyncStorage.getItem('@mobile-flashcards', (result) => {
     return JSON.parse(result)

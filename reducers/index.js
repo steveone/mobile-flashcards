@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux'
+import _ from 'lodash'
 
 import {
   ADD_DECKS,
   SET_DECKS,
   SET_LOADED,
-  SAVE_NEW_QUESTION
+  SAVE_NEW_QUESTION,
+  ADD_NEW_DECK,
 } from '../actions/types'
 
 const initialQuestions = null;
@@ -28,6 +30,21 @@ function decks (state = {}, action) {
 //console.log("in reducer")
 //console.log(action.data)
   switch (action.type) {
+//    let retVal = {}
+    case ADD_NEW_DECK:
+    //_.assign(retVal,state)
+      retVal = Object.assign({},state)
+      let newDeckName = data.newDeckName
+      let newDeck = {
+            questions:[],
+            title: newDeckName
+          }
+
+      retVal[newDeckName] = newDeck
+    return {
+      ...state,...retVal
+    }
+
     case SET_DECKS:
       return {
         ...state, ...action
@@ -42,8 +59,11 @@ function decks (state = {}, action) {
       question: action.data.newQuestion,
       answer: action.data.newAnswer
     }
-    let retVal = Object.assign({},state)
-    Object.keys(retVal).map( (currentValue, index, arry) => {
+//    let retVal = Object.assign({},state.decks)
+    let retVal = {}
+    _.assign(retVal,state.decks)
+    _.keys(retVal)
+    .map( (currentValue, index, arry) => {
       if (currentValue === deck) {
         let questionCount = retVal[currentValue].questions.length
         retVal[currentValue].push(newQuestion);
@@ -52,7 +72,6 @@ function decks (state = {}, action) {
         }
       else { return retVal[currentValue]}
       });
-    console.log(retVal)
     return {...state,...retVal}
     default:
     return state
