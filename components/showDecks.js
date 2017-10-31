@@ -84,8 +84,13 @@ createNewDeck() {
       1000
     )
   }
-
+  //now we route to the new deck
+  this.props.navigation.navigate('Deck',{
+    deck:data.newDeckName,
+    totalQuestions:0, refresh: this.refreshFunction
+  })
 }
+
 
   constructor(props) {
     super(props);

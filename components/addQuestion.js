@@ -107,9 +107,6 @@ saveQuestionToDeck = () => {
             }
             else { return retVal[index]}
         });
-  console.log("before remove decks")
-  console.log(retVal)
-  console.log("still before removing deck")
   removeDecks().then(() => updateDecks(retVal))
 
   try{
@@ -121,6 +118,12 @@ saveQuestionToDeck = () => {
  }
 
   this.setState({newQuestion:'',newAnswer:''})
+
+  this.props.navigation.navigate('Deck',{
+    deck:data.deck,
+    totalQuestions:0, refresh: this.refreshFunction
+  })
+
 }
 
 
