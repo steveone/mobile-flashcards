@@ -12,7 +12,7 @@ var STORAGE_KEY = '@mobile-flashcards';
 
 let loadedState = null
 
-let deck = {
+let defaultDecks = {
   React: {
   title: 'React',
   questions: [
@@ -84,8 +84,12 @@ createNewDeck() {
       1000
     )
   }
-
+  this.props.navigation.navigate('Deck',{
+    deck:data.newDeckName,
+    totalQuestions:0, refresh: this.refreshFunction
+  })
 }
+
 
   constructor(props) {
     super(props);
@@ -106,6 +110,10 @@ createNewDeck() {
 
     const { width, height } = Dimensions.get('window');
     getDecks().then((decks) => this.props.setDecks(JSON.parse(decks)))
+    if (this.state.decks === 'undefined'){
+        this.props.updateDecks(defaultDecks)
+
+    }
     //I want a spinner to show even though loading is fast
     setTimeout(this.props.setLoaded,
     1000
@@ -144,10 +152,6 @@ outputLog = () => {
     }
 
 render(){
-
-//console.log(this.props.decks)
-//console.log(decks)
-//console.log(this.props.loaded)
 const showLoading = (this.props.loaded === null) ? true : false
 let decks = null
 if (this.props.decks) {
@@ -214,15 +218,11 @@ return (
 
 const styles = StyleSheet.create({
   fullContainer: {
-//    top:0,
-//    backgroundColor: 'red',
     borderColor: 'black',
     borderStyle: 'solid',
-//    borderRadius: 20,
     flex: 1,
     height:this.height-500,
     width:this.width,
-  //  padding:10
   },
   container: {
     top:20,
@@ -271,6 +271,7 @@ function mapDispatchToProps(dispatch) {
     setDecks: (data) => dispatch(setDecks(data)),
     setLoaded: () => dispatch(setLoaded()),
     addNewDeck: (data) => dispatch(addNewDeck(data)),
+    updateDecks: (data) => dispatch(updateDecks(data)),
   }
 }
 
