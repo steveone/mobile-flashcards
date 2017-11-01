@@ -4,6 +4,7 @@ var STORAGE_KEY = '@mobile-flashcards';
 
 
 export function getDecks(){
+  console.log("in get decks")
   return AsyncStorage.getItem('@mobile-flashcards', (result) => {
     return JSON.parse(result)
   })
@@ -41,9 +42,6 @@ export function removeEntry(key){
     })
 }
 
-export function loadDefaultDecks(){
-  updateDecks(this.defaultDecks)
-}
 
 const defaultDecks = {
   React: {

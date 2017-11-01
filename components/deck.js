@@ -102,6 +102,7 @@ outputLog = () => {
 
 render(){
 let t = JSON.stringify(this.props.decks)
+console.log("outputing decks from deck.js")
 console.log(t)
 //console.log(this.props.loaded)
 const showLoading = (this.props.loaded === null) ? true : false
@@ -116,13 +117,13 @@ return (
 
   <View  key='11' style={{flex: 1, height:this.height-500, width:this.width-300}}>
 
-  {(this.props.loaded === null) && (
+  {/*(this.props.loaded === null) && (
       <ActivityIndicator
         animating={showLoading}
         color='white'
         backgroundColor='black'
         size='large' />
-  )}
+  )*/}
 
   <ScrollView style={styles.fullContainer}>
 {decks && Object.keys(decks)

@@ -184,13 +184,13 @@ questions = (decks !== null) ? decks[showingDeck]['questions'] : null
 console.log(totalQuestions)
 return (
   <View  key='11' style={{flex: 1, height:this.height-500, width:this.width-300}}>
-  {(this.props.loaded === null) && (
+  {/*(this.props.loaded === null) && (
       <ActivityIndicator
         animating={showLoading}
         color='white'
         backgroundColor='black'
         size='large' />
-  )}
+  )*/}
 
   <Modal animationType="fade"
           transparent={false}

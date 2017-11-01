@@ -110,8 +110,11 @@ createNewDeck() {
 
     const { width, height } = Dimensions.get('window');
     getDecks().then((decks) => this.props.setDecks(JSON.parse(decks)))
-    if (this.state.decks === 'undefined'){
+    console.log("decks are")
+    console.log(this.state.decks)
+    if (this.state.decks === 'undefined') {
         this.props.updateDecks(defaultDecks)
+        console.log("Adding default decks")
 
     }
     //I want a spinner to show even though loading is fast

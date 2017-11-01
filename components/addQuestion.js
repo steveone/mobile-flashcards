@@ -36,11 +36,13 @@ class AddQuestion extends React.Component {
   }
 
   componentDidUpdate(){
-    if (this.state.loaded != true) {
+    console.log("in component did update")
+    console.log(this.props.loaded)
+  /*  if ((this.props.loaded) && (this.props.loaded.loaded !== true)) {
       setTimeout(this.props.setLoaded,
       1000
       )
-    }
+    }*/
   }
 
    _loadInitialState() {
@@ -72,6 +74,7 @@ class AddQuestion extends React.Component {
     }
 
 saveQuestionToDeck = () => {
+  console.log("in save question to deck")
   deck = this.props.navigation.state.params.deck
   newQuestion = this.state.newQuestion
   newAnswer = this.state.newAnswer
@@ -110,6 +113,7 @@ saveQuestionToDeck = () => {
   removeDecks().then(() => updateDecks(retVal))
 
   try{
+    console.log("in try")
     console.log(this.props)
     this.props.saveNewQuestion(data)
   } catch(error){
@@ -141,13 +145,13 @@ return (
 
   <View  key='11' style={{flex: 1, height:this.height-500, width:this.width-300}}>
 
-  {(this.props.loaded === null) && (
+  {/*(this.props.loaded === null) && (
       <ActivityIndicator
         animating={showLoading}
         color='white'
         backgroundColor='black'
         size='large' />
-  )}
+  )*/}
 
   <ScrollView style={styles.fullContainer}>
 {decks && Object.keys(decks)
