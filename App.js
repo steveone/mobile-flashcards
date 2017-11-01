@@ -9,30 +9,18 @@ import { createStore,applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk';
 import { Notifications, Permissions } from 'expo'
 import {setLocalNotification, getCurrentNotification} from './utils/notifications'
-import Reactotron from 'reactotron-react-native'
-import './ReactotronConfig'
+//import Reactotron from 'reactotron-react-native'
+//import './ReactotronConfig'
 var STORAGE_KEY = '@mobile-flashcards';
-
-
-//  NativeModules.DevSettings.setIsDebuggingRemotely(true)
 
 const myStore = store(
   reducer,
   applyMiddleware(thunk,logger),
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-
 );
 
-
-
 export default class App extends Component {
-
-
-
     componentDidMount() {
-      //this._loadInitialState().done();
-      //this.props.getDecks(STORAGE_KEY);
-    //  console.log(this.props)
     const { width, height } = Dimensions.get('window');
     console.log("setting current")
     setLocalNotification()
@@ -41,43 +29,14 @@ export default class App extends Component {
 
     }
 
-
-
-
   render() {
 
 return (
   <Provider store={myStore}>
           <Navigator />
       </Provider>
-)
-}
-    /*let decks = this.props
-    if (this.props) {
-      decks = this.props
-//      console.log(decks)
-      }
-
-    return (
-  <ScrollView style={styles.container} contentContainerStyle={styles.center}>
-      <Text>
-      d
-      </Text>
-      <Text>
-      {
-      (decks && Object.keys(decks)
-      .map((cur,val,arry) => {
-          decks[cur]
-       })
-     )
-     }
-     </Text>
-
-      </ScrollView>
-
-
-    );
-  }*/
+    )
+  }
 }
 
 const logger = store => next => action => {
@@ -116,9 +75,3 @@ function mapDispatchToProps(dispatch) {
 }
 
 const AppWithNavigationState = connect(mapStateToProps)(App);
-
-/*
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps)(AppWithNavigationState)
-*/
