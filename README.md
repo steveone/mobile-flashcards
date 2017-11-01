@@ -6,7 +6,7 @@ This project was bootstrapped with [Create React Native App](https://github.com/
 
 Before running, download the repository and build with with either yarn or npm
 
-## YARN INSTALL or NPM INSTALL
+### YARN INSTALL or NPM INSTALL
 
 To run, you will need either Xcode, and Android SDK or a iPhone or Android device that supports Expo which you can download in the Google Play or Apple App Store
 
